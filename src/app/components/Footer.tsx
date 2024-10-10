@@ -7,16 +7,16 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from '../styles/Footer.module.css';
 
-
 const Footer: React.FC = () => {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
 
-  const isActive = (path: string) => pathname === path;
+  // パスが複数ある場合にも対応する関数
+  const isActive = (...paths: string[]) => paths.includes(pathname);
 
   return (
     <footer className={styles.footer}>
       <div className={styles.iconContainer}>
-        <Link href="/" className={`${styles.iconButton} ${isActive('/') ? styles.active : ''}`}>
+        <Link href="/" className={`${styles.iconButton} ${isActive('/', '/Roulette/Roulette_Search') ? styles.active : ''}`}>
           <FaSearch className={styles.icon} />
           <span>検索</span>
         </Link>
