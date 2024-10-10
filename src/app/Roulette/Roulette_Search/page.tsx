@@ -1,9 +1,12 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
-import { Wheel } from 'react-custom-roulette';
 import style from './RoulettePage.module.css';
 import Footer from '@/app/components/Footer';
+
+// Wheel コンポーネントの動的インポート（サーバーサイドレンダリングを避ける）
+const DynamicWheel = dynamic(() => import('react-custom-roulette').then(mod => mod.Wheel), { ssr: false });
 
 const allGenres = [
   'イタリアン',
@@ -99,7 +102,7 @@ const RestaurantRoulette: React.FC = () => {
 
           {/* ルーレット表示 */}
           {randomGenres.length > 0 ? (
-            <Wheel
+            <DynamicWheel
               mustStartSpinning={isSpinning}
               prizeNumber={prizeIndex !== null ? prizeIndex : 0}
               data={randomGenres}
