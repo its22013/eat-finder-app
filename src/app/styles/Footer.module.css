@@ -1,0 +1,57 @@
+/* Footer.module.css */
+
+.footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.iconButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  width: 10%; 
+  text-align: center; 
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.iconButton:hover {
+  background-color: #e9ecef; 
+  color: #007bff; 
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.active {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 932px) {
+  .iconButton {
+    width: 20%;
+  }
+}
