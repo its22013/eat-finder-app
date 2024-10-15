@@ -1,7 +1,8 @@
 .page_container {
   display: flex;
   flex-direction: column;
-  min-height: 175vh;
+  max-height: 175vh;
+  overflow: scroll;
 }
 
 .header {
@@ -44,7 +45,7 @@
 }
 
 .scrollable_container {
-  max-height: 150px; 
+  max-height: 190px; 
   overflow-y: auto; /* 縦方向のスクロールを可能に */
   border: 2px solid #ccc; /* 枠のスタイル */
   border-radius: 8px; /* 角を丸く */
@@ -88,6 +89,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
 }
 
 .text01 {
@@ -128,7 +130,7 @@
 
 @media screen and (max-width: 932px) {
   .page_container {
-    min-height: 110vh;
+    min-height: 140vh;
   }
 }
 .text01 {

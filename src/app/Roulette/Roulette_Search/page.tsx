@@ -129,7 +129,17 @@ const RestaurantRoulette: React.FC = () => {
 
           {/* ランダムに選ばれたジャンルのリスト */}
           <div>
-            <h2>ルーレットのジャンル:</h2>
+            
+            {/* 未選択のジャンルから選択できるドロップダウン */}
+            <div className={style.drop_jank}>
+              <select onChange={(e) => handleAddGenre(e.target.value)} value="">
+                <option value="" disabled>ジャンルを選択</option>
+                {remainingGenres.map((genre, index) => (
+                  <option key={index} value={genre}>{genre}</option>
+                ))}
+              </select>
+            </div>
+            
             <div className={style.scrollable_container}>
               <ul className={style.ul}>
                 {randomGenres.map((genre, index) => (
@@ -140,16 +150,6 @@ const RestaurantRoulette: React.FC = () => {
                 ))}
               </ul>
             </div>
-          </div>
-
-          {/* 未選択のジャンルから選択できるドロップダウン */}
-          <div className={style.drop_jank}>
-            <select onChange={(e) => handleAddGenre(e.target.value)} value="">
-              <option value="" disabled>ジャンルを選択</option>
-              {remainingGenres.map((genre, index) => (
-                <option key={index} value={genre}>{genre}</option>
-              ))}
-            </select>
           </div>
         </div>
       </div>
