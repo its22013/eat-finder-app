@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import style from './RoulettePage.module.css';
 import Footer from '@/app/components/Footer';
 
-// Wheel コンポーネントの動的インポート（サーバーサイドレンダリングを避ける）
 const DynamicWheel = dynamic(() => import('react-custom-roulette').then(mod => mod.Wheel), { ssr: false });
 
 const allGenres = [
@@ -21,25 +20,25 @@ const allGenres = [
   'ファーストフード'
 ];
 
-// 色の配列を指定
 const genreColors = ['#c70000', '#d28300', '#dfd000', '#00873c', '#005aa0', '#181878', '#800073'];
 
 const RestaurantRoulette: React.FC = () => {
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // 選択されたジャンル
-  const [isSpinning, setIsSpinning] = useState(false); // スピン中かどうかのフラグ
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [isSpinning, setIsSpinning] = useState(false);
   const [randomGenres, setRandomGenres] = useState<{ option: string; style: { backgroundColor: string } }[]>([]);
   const [prizeIndex, setPrizeIndex] = useState<number | null>(null);
-  const [winner, setWinner] = useState<string | null>(null); // ルーレットの結果を表示するためのステート
+  const [winner, setWinner] = useState<string | null>(null);
 
   useEffect(() => {
-    // 初回レンダリング時にランダムに5個のジャンルを選択
-    const initialGenres = allGenres.sort(() => 0.5 - Math.random()).slice(0, 5);
-    setSelectedGenres(initialGenres);
-    updateRandomGenres(initialGenres);
+    if (typeof window !== 'undefined') {
+      const initialGenres = allGenres.sort(() => 0.5 - Math.random()).slice(0, 5);
+      setSelectedGenres(initialGenres);
+      updateRandomGenres(initialGenres);
+    }
   }, []);
 
   const updateRandomGenres = (genres: string[]) => {
-    const selectedCount = Math.min(genres.length, 5); // 最大5個のジャンルを選択
+    const selectedCount = Math.min(genres.length, 5);
     const randomSelection = genres
       .sort(() => 0.5 - Math.random())
       .slice(0, selectedCount)
@@ -47,24 +46,23 @@ const RestaurantRoulette: React.FC = () => {
         option: genre,
         style: { backgroundColor: genreColors[index % genreColors.length] }
       }));
-
     setRandomGenres(randomSelection);
   };
 
   const handleSpin = () => {
-    if (isSpinning || randomGenres.length === 0) return; // スピン中またはジャンルがない場合は何もしない
+    if (isSpinning || randomGenres.length === 0) return;
 
     const randomPrizeIndex = Math.floor(Math.random() * randomGenres.length);
     setPrizeIndex(randomPrizeIndex);
-    setIsSpinning(true); // スピン開始を設定
-    setWinner(null); // スピン前にリセット
+    setIsSpinning(true);
+    setWinner(null);
   };
 
   const handleAddGenre = (genre: string) => {
     if (genre && !selectedGenres.includes(genre)) {
       setSelectedGenres(prev => {
         const updatedGenres = [...prev, genre];
-        updateRandomGenres(updatedGenres); 
+        updateRandomGenres(updatedGenres);
         return updatedGenres;
       });
     }
@@ -73,27 +71,23 @@ const RestaurantRoulette: React.FC = () => {
   const handleRemoveGenre = (genre: string) => {
     setSelectedGenres(prev => {
       const updatedGenres = prev.filter(g => g !== genre);
-      updateRandomGenres(updatedGenres); 
+      updateRandomGenres(updatedGenres);
       return updatedGenres;
     });
   };
 
-  // プルダウンに表示するためのジャンル (すでに選択されているものを除く)
   const remainingGenres = allGenres.filter(
     genre => !selectedGenres.includes(genre)
   );
-  
+
   return (
     <div className={style.page_container}>
-      {/* タイトルを固定 */}
       <header className={style.header}>
         飲食店ジャンルルーレット
       </header>
 
-      {/* スクロール可能なコンテンツ */}
       <div className={style.content}>
         <div className={style.result_container}>
-          {/* ルーレット結果の表示 */}
           {winner && (
             <div className={style.result_container01}>
               <h2>今回は</h2>
@@ -102,7 +96,6 @@ const RestaurantRoulette: React.FC = () => {
             </div>
           )}
 
-          {/* ルーレット表示 */}
           {randomGenres.length > 0 ? (
             <DynamicWheel
               mustStartSpinning={isSpinning}
@@ -122,15 +115,11 @@ const RestaurantRoulette: React.FC = () => {
             <p>ジャンルがまだ選択されていません。</p>
           )}
 
-          {/* ルーレットを回すボタン */}
           <button onClick={handleSpin} disabled={isSpinning || randomGenres.length === 0} className={style.button}>
             ルーレットを回す
           </button>
 
-          {/* ランダムに選ばれたジャンルのリスト */}
           <div>
-            
-            {/* 未選択のジャンルから選択できるドロップダウン */}
             <div className={style.drop_jank}>
               <select onChange={(e) => handleAddGenre(e.target.value)} value="">
                 <option value="" disabled>ジャンルを選択</option>
@@ -139,7 +128,7 @@ const RestaurantRoulette: React.FC = () => {
                 ))}
               </select>
             </div>
-            
+
             <div className={style.scrollable_container}>
               <ul className={style.ul}>
                 {randomGenres.map((genre, index) => (
@@ -154,11 +143,11 @@ const RestaurantRoulette: React.FC = () => {
         </div>
       </div>
 
-      {/* Footerは画面の下部に固定 */}
       <footer className={style.footer}>
         <Footer />
       </footer>
     </div>
   );
 };
+
 export default RestaurantRoulette;
