@@ -7,13 +7,19 @@
 
 .header {
   flex-shrink: 0;
-  background-color: #ffc267; /* ヘッダーに目立つ色を追加 */
+  background-image: url('/images/Roulette_Search.png');
   color: white;
   padding: 15px;
   text-align: center;
   font-size: 26px;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title01 {
+  font-size: 24px;
+  border: solid 3px #62c1ce;
+  border-radius: 3px;
 }
 
 .content {
@@ -125,6 +131,27 @@
 .button:active {
   background-color: #68d7a9;
   transform: translateY(1px); /* クリック時の押し込みアニメーション */
+}
+
+.button_container {
+  display: flex; /* 横並びにするための設定 */
+  gap: 10px; /* ボタン間の隙間を設定 */
+  margin-top: 20px; /* 上部にスペースを作る */
+}
+
+.button_container button {
+  padding: 10px 20px; /* ボタンの内側のスペース */
+  font-size: 16px; /* フォントサイズ */
+  cursor: pointer; /* カーソルをポインターにする */
+  border: none; /* ボーダーなし */
+  border-radius: 5px; /* 角を丸くする */
+  background-color: #005aa0; /* ボタンの背景色 */
+  color: white; /* ボタンの文字色 */
+  transition: background-color 0.3s; /* ホバー時のアニメーション */
+}
+
+.button_container button:hover {
+  background-color: #004080; /* ホバー時の背景色 */
 }
 
 
