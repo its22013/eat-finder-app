@@ -44,7 +44,6 @@ export default function StoreSearch() {
                 onKeyDown={handleKeyDown}
                 placeholder="キーワードを入力"
             />
-            <button className={styles.button} onClick={searchStore}><SearchIcon height={25} right={30}/></button>
 
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
