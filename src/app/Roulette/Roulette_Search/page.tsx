@@ -4,6 +4,9 @@ import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import style from './RoulettePage.module.css';
 import Footer from '@/app/components/Footer';
+import ResultDisplay from './ResultDisplay';
+import GenreSelector from './GenreSelector';
+import GenreList from './GenreList';
 
 const DynamicWheel = dynamic(() => import('react-custom-roulette').then(mod => mod.Wheel), { ssr: false });
 
@@ -80,22 +83,26 @@ const RestaurantRoulette: React.FC = () => {
     genre => !selectedGenres.includes(genre)
   );
 
+  const handleSearchRestaurant = () => {
+    if (winner) {
+      // ここにジャンルに基づく店を検索するロジックを追加します。
+      console.log(`Searching restaurants for: ${winner}`);
+      // 例: ルーティングなど
+    }
+  };
+
   return (
     <div className={style.page_container}>
       <header className={style.header}>
+        <h1 className={style.title01}>
         飲食店ジャンルルーレット
+        </h1>
       </header>
 
       <div className={style.content}>
         <div className={style.result_container}>
-          {winner && (
-            <div className={style.result_container01}>
-              <h2>今回は</h2>
-              <h1 className={style.text01}>{winner}</h1>
-              <h2>に決定！</h2>
-            </div>
-          )}
-
+          <ResultDisplay winner={winner} />
+          
           {randomGenres.length > 0 ? (
             <DynamicWheel
               mustStartSpinning={isSpinning}
@@ -115,31 +122,26 @@ const RestaurantRoulette: React.FC = () => {
             <p>ジャンルがまだ選択されていません。</p>
           )}
 
-          <button onClick={handleSpin} disabled={isSpinning || randomGenres.length === 0} className={style.button}>
-            ルーレットを回す
-          </button>
+          {/* ルーレットが回っている間は表示しない */}
+          {!isSpinning && randomGenres.length > 0 && !winner && (
+            <button onClick={handleSpin} className={style.button}>
+              ルーレットを回す
+            </button>
+          )}
 
-          <div>
-            <div className={style.drop_jank}>
-              <select onChange={(e) => handleAddGenre(e.target.value)} value="">
-                <option value="" disabled>ジャンルを選択</option>
-                {remainingGenres.map((genre, index) => (
-                  <option key={index} value={genre}>{genre}</option>
-                ))}
-              </select>
+          {winner && (
+            <div className={style.button_group}>
+              <button onClick={handleSearchRestaurant} className={style.button}>
+                店を検索
+              </button>
+              <button onClick={handleSpin} className={style.button}>
+                もう一度
+              </button>
             </div>
+          )}
 
-            <div className={style.scrollable_container}>
-              <ul className={style.ul}>
-                {randomGenres.map((genre, index) => (
-                  <li key={index} className={style.li}>
-                    <span>{genre.option}</span>
-                    <button onClick={() => handleRemoveGenre(genre.option)}>削除</button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <GenreSelector remainingGenres={remainingGenres} handleAddGenre={handleAddGenre} />
+          <GenreList randomGenres={randomGenres} handleRemoveGenre={handleRemoveGenre} />
         </div>
       </div>
 
