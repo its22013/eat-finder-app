@@ -1,6 +1,8 @@
 'use client';
-
+import Footer from '../components/Footer';
 import { useState } from 'react';
+import styles from '../Store_Search/Search.module.css'
+import { SearchIcon } from'@chakra-ui/icons'
 
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
@@ -26,27 +28,39 @@ export default function StoreSearch() {
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            searchStore(); // Enterキーが押されたら検索を実行
+        }
+    };
+
     return (
-        <div>
-            <h1>Store Search</h1>
-            <input 
+        <div className={styles.text}>
+            <h1>飲食店検索</h1>
+            <input className={styles.holder}
                 type="text" 
                 value={keyword} 
                 onChange={(e) => setKeyword(e.target.value)} 
-                placeholder="Enter keyword"
+                onKeyDown={handleKeyDown}
+                placeholder="キーワードを入力"
             />
-            <button onClick={searchStore}>Search</button>
+            <button className={styles.button} onClick={searchStore}><SearchIcon height={25} right={30}/></button>
 
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-            <ul>
+            <ul className={styles.searchResults}>
                 {results.map((shop, index) => (
-                    <li key={index}>
+                    <li key={index} className={styles.shopItem}>
                         <h3>{shop.name}</h3>
                         <p>{shop.address}</p>
+                        <p>{shop.genre.name}</p>
+                        {shop.logo_image && (
+                            <img src={shop.logo_image} alt={`${shop.name} logo`} />
+                        )}
                     </li>
                 ))}
             </ul>
+            <Footer />
         </div>
     );
 }
