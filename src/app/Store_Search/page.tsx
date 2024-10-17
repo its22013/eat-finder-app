@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import { useState } from 'react';
 import styles from '../Store_Search/Search.module.css'
 
+
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
