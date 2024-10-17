@@ -7,18 +7,31 @@ export async function GET(req: Request) {
     const keyword = searchParams.get('q') || ''; // 検索キーワードが無い場合、空文字列に設定
     const apikey = process.env.SEARCH_API_KEY; // あなたのホットペッパーAPIキー
 
+    if (!apikey) {
+        return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
+    }
+
     // パラメータの組み立て
     const params = new URLSearchParams({
-        key: apikey || '', // APIキーがない場合、空文字列に設定
+        key: apikey,
         keyword: keyword,
         format: 'json'
     });
 
     const url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${params}`;
 
-    // APIリクエストを送信
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+        // APIリクエストを送信
+        const res = await fetch(url);
 
-    return NextResponse.json(data);
+        if (!res.ok) {
+            return NextResponse.json({ error: 'Failed to fetch data from HotPepper API' }, { status: res.status });
+        }
+
+        const data = await res.json();
+        return NextResponse.json(data);
+    } catch (error) {
+        return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
+    }
 }
+

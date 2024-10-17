@@ -1,45 +1,72 @@
-/* Search.module.css */
 .text {
-    text-align: center;
-  }
-  
-  .holder {
-    width: 20%;
-    height: 35px;
-    padding: 10px;
-    margin: 10px auto;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-  }
-  .searchResults {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .shopItem {
-    border: 1px solid #ddd; /* 枠線 */
-    padding: 20px; /* パディング */
-    margin-bottom: 20px; /* 各店舗ごとのスペース */
-    border-radius: 8px; /* 角を丸くする */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ボックスにシャドウを追加 */
-    background-color: #fff; /* 背景色 */
-    text-align: left; /* テキストを左揃え */
-  }
-  
-  .shopItem h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .shopItem p {
-    margin: 5px 0;
-  }
-  
-  .shopItem img {
-    max-width: 100px;
-    height: auto;
-    border-radius: 8px; /* 画像の角も丸くする */
-    display: block;
-    margin-top: 10px;
-  }
-  
+  text-align: center;
+}
+
+.holder {
+  width: 20%;
+  height: 35px;
+  padding: 10px;
+  margin: 10px auto;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.searchResults {
+  list-style-type: none;
+  padding: 0;
+}
+
+.shopItem {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  text-align: left;
+}
+
+.shopItem h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.shopItem p {
+  margin: 5px 0;
+}
+
+.shopImage {
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin-left: 14%; /* 画像の右にスペースを追加 */
+  margin-top: 20px;
+}
+
+/* 画像と住所を横並びに配置 */
+.imageAndAddressContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左揃え */
+  gap: 50px; /* 画像と住所の間のスペース */
+}
+
+.address {
+  flex: 1; /* 画像と横並びに住所を表示 */
+  text-align: center;
+}
+
+/* ジャンルを右側に配置 */
+.infoContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}
+
+.genre {
+  text-align: right;
+  width: auto;
+  margin-left: auto; /* 右に配置 */
+}
