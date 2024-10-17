@@ -2,7 +2,7 @@
 import Footer from '../components/Footer';
 import { useState } from 'react';
 import styles from '../Store_Search/Search.module.css'
-import { SearchIcon } from'@chakra-ui/icons'
+
 
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
