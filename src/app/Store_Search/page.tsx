@@ -51,11 +51,23 @@ export default function StoreSearch() {
                 {results.map((shop, index) => (
                     <li key={index} className={styles.shopItem}>
                         <h3>{shop.name}</h3>
-                        <p>{shop.address}</p>
-                        <p>{shop.genre.name}</p>
-                        {shop.logo_image && (
-                            <img src={shop.logo_image} alt={`${shop.name} logo`} />
-                        )}
+
+                        {/* 画像と住所を横並びに配置 */}
+                        <div className={styles.imageAndAddressContainer}>
+                            {shop.logo_image && (
+                                <img 
+                                    src={shop.logo_image} 
+                                    alt={`${shop.name} logo`} 
+                                    className={styles.shopImage} 
+                                />
+                            )}
+                            <p className={styles.address}>{shop.address}</p>
+                        </div>
+
+                        {/* ジャンルを右側に配置 */}
+                        <div className={styles.infoContainer}>
+                            <p className={styles.genre}>{shop.genre.name}</p>
+                        </div>
                     </li>
                 ))}
             </ul>
