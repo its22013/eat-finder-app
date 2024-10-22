@@ -11,6 +11,35 @@
   border-radius: 5px;
 }
 
+.filterButton {
+  background-color: #4CAF50; /* 緑の背景 */
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filterButton:hover {
+  background-color: #45a049; /* ホバー時の色 */
+}
+
+.filterMenu {
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 50%;
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+.filterMenu label {
+  display: block;
+  margin-bottom: 10px;
+}
+
 .searchResults {
   list-style-type: none;
   padding: 0;
@@ -30,34 +59,31 @@
   font-size: 18px;
   margin-bottom: 10px;
 }
-
-.shopItem p {
-  margin: 5px 0;
-}
-
-.shopImage {
-  max-width: 300px;
-  height: auto;
-  border-radius: 8px;
-  display: block;
-  margin-left: 14%; /* 画像の右にスペースを追加 */
-  margin-top: 20px;
-}
-
-/* 画像と住所を横並びに配置 */
 .imageAndAddressContainer {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 左揃え */
-  gap: 50px; /* 画像と住所の間のスペース */
+  justify-content: flex-start; /* 要素を左揃え */
+  gap: 30px; /* 画像と住所、営業時間の間隔を調整 */
+}
+
+.shopImage,
+.shopLogo {
+  max-width: 150px; /* ロゴと写真の大きさを調整 */
+  height: auto;
+  border-radius: 8px;
 }
 
 .address {
-  flex: 1; /* 画像と横並びに住所を表示 */
-  text-align: center;
+  flex: 1; /* 必要に応じて可変幅にする */
+  text-align: left;
 }
 
-/* ジャンルを右側に配置 */
+.open {
+  text-align: left;
+  flex: 1;
+}
+
+
 .infoContainer {
   display: flex;
   justify-content: flex-end;
@@ -67,6 +93,18 @@
 
 .genre {
   text-align: right;
-  width: auto;
-  margin-left: auto; /* 右に配置 */
+}
+.searchButton {
+  width: 100px; /* ボタンの幅を調整 */
+  padding: 10px;
+  margin-top: 10px; /* 入力フィールドとボタンの間にスペースを追加 */
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50; /* ボタンの背景色 */
+  color: white; /* テキストの色 */
+  cursor: pointer; /* カーソルをポインタに変更 */
+}
+
+.searchButton:hover {
+  background-color: #45a049; /* ホバー時の背景色 */
 }
