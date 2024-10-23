@@ -12,6 +12,7 @@ export async function GET(req: Request) {
     const free_f = searchParams.get('free_f') || '0';
     const parking = searchParams.get('parking') || '0';
     const midnight = searchParams.get('midnight') || '0';
+    const service_a = searchParams.get('service_area')
     const apikey = process.env.SEARCH_API_KEY;
 
     const params = new URLSearchParams({
@@ -25,7 +26,8 @@ export async function GET(req: Request) {
         free_drink: free_d,
         free_food: free_f,
         parking: parking,
-        midnight: midnight
+        midnight: midnight,
+        service_area: service_a || ''
     });
 
     const url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${params}`;
