@@ -5,11 +5,13 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const keyword = searchParams.get('q') || '';
-    
-    // Wi-Fiと個室のパラメータを取得
-    const wifi = searchParams.get('wifi') === '1' ? '1' : '0'; // チェックされていれば1、そうでなければ0
-    const privateRoom = searchParams.get('private_room') === '1' ? '1' : '0'; // 同上
-    const lunch = searchParams.get('lunch') == '1' ? '1' : '0';
+    const wifi = searchParams.get('wifi') || '0';
+    const privateRoom = searchParams.get('private_room') || '0';
+    const lunch = searchParams.get('lunch') || '0'; // ランチ有無の取得
+    const free_d = searchParams.get('free_d') || '0'; // ドリンク無料の取得
+    const free_f = searchParams.get('free_f') || '0';
+    const parking = searchParams.get('parking') || '0';
+    const midnight = searchParams.get('midnight') || '0';
     const apikey = process.env.SEARCH_API_KEY;
 
     const params = new URLSearchParams({
@@ -19,7 +21,11 @@ export async function GET(req: Request) {
         private_room: privateRoom,
         format: 'json',
         count: '50', // 取得件数を50に設定
-        lunch: lunch
+        lunch: lunch,
+        free_drink: free_d,
+        free_food: free_f,
+        parking: parking,
+        midnight: midnight
     });
 
     const url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${params}`;
