@@ -5,19 +5,18 @@ import dynamic from 'next/dynamic';
 import { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import styles from './map.module.css';
-import StoreInfo from './StoreInfo';
-import StoreMarkers from './StoreMarkers';
-import UserLocation from './UserLocation';
-import SearchButton from './SearchButton';
 import Footer from '../../components/Footer';
 import Header from './header/header';
 
-// MapContainer, TileLayer, Circle を動的にインポートして、サーバーサイドレンダリングを防止
+// Dynamically import components with SSR disabled
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Circle = dynamic(() => import('react-leaflet').then(mod => mod.Circle), { ssr: false });
+const StoreInfo = dynamic(() => import('./StoreInfo'), { ssr: false });
+const StoreMarkers = dynamic(() => import('./StoreMarkers'), { ssr: false });
+const UserLocation = dynamic(() => import('./UserLocation'), { ssr: false });
+const SearchButton = dynamic(() => import('./SearchButton'), { ssr: false });
 
-// Store の情報型を定義
 interface Store {
   name: string;
   lat: number;
@@ -34,7 +33,6 @@ const RestaurantMap: React.FC = () => {
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
 
   useEffect(() => {
-    // クライアントサイドでのみ実行
     if (typeof window !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -42,22 +40,22 @@ const RestaurantMap: React.FC = () => {
           setPosition([latitude, longitude]);
 
           fetch(`/api/hotpepper?q=飲食店&lat=${latitude}&lng=${longitude}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.results?.shop) {
-              const fetchedStores = data.results.shop.map((shop: any) => ({
-                name: shop.name,
-                lat: parseFloat(shop.lat),
-                lng: parseFloat(shop.lng),
-                address: shop.address || '住所不明',
-                phone: shop.tel || '電話番号不明',
-                budget: shop.budget
-                  ? {
-                      code: shop.budget.code || '不明',
-                      name: shop.budget.name || '不明',
-                      average: shop.budget.average || '不明',
-                    }
-                  : undefined,
+            .then(res => res.json())
+            .then(data => {
+              if (data.results?.shop) {
+                const fetchedStores = data.results.shop.map((shop: any) => ({
+                  name: shop.name,
+                  lat: parseFloat(shop.lat),
+                  lng: parseFloat(shop.lng),
+                  address: shop.address || '住所不明',
+                  phone: shop.tel || '電話番号不明',
+                  budget: shop.budget
+                    ? {
+                        code: shop.budget.code || '不明',
+                        name: shop.budget.name || '不明',
+                        average: shop.budget.average || '不明',
+                      }
+                    : undefined,
                   photo: {
                     pc: {
                       l: shop.photo.pc.l || '',
@@ -69,14 +67,14 @@ const RestaurantMap: React.FC = () => {
                       s: shop.photo.mobile.s || '',
                     },
                   },
-              }));
-              setStores(fetchedStores);
-              setHighlightedStore(fetchedStores[Math.floor(Math.random() * fetchedStores.length)]);
-            } else {
-              setError('飲食店が見つかりませんでした。');
-            }
-          })
-          .catch(() => setError('データ取得中にエラーが発生しました。'));
+                }));
+                setStores(fetchedStores);
+                setHighlightedStore(fetchedStores[Math.floor(Math.random() * fetchedStores.length)]);
+              } else {
+                setError('飲食店が見つかりませんでした。');
+              }
+            })
+            .catch(() => setError('データ取得中にエラーが発生しました。'));
         },
         (error) => setError('現在地を取得できませんでした。' + error.message)
       );

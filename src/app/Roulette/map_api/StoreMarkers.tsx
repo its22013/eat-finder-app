@@ -22,23 +22,25 @@ const StoreMarkers: React.FC<{
   stores: Store[];
   highlightedStore: Store | null;
   setHighlightedStore: (store: Store) => void;
-}> = ({ stores, highlightedStore, setHighlightedStore }) => (
-  <>
-    {stores.map((store, index) => (
-      <Marker
-        key={index}
-        position={[store.lat, store.lng]}
-        icon={customIcon}
-        eventHandlers={{ click: () => setHighlightedStore(store) }}
-      >
-        <Popup>
-          <strong>{store.name}</strong><br />
-          {store.address}<br />
-          {store.phone}
-        </Popup>
-      </Marker>
-    ))}
-  </>
-);
+}> = ({ stores, highlightedStore, setHighlightedStore }) => {
+  return (
+    <>
+      {stores.map((store, index) => (
+        <Marker
+          key={index}
+          position={[store.lat, store.lng]}
+          icon={customIcon}
+          eventHandlers={{ click: () => setHighlightedStore(store) }}
+        >
+          <Popup>
+            <strong>{store.name}</strong><br />
+            {store.address}<br />
+            {store.phone}
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+};
 
 export default StoreMarkers;
