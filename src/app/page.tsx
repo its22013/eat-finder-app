@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const Home: React.FC = () => {
   const router = useRouter(); 
   const handleForm01 = () => {
-    router.push('/Roulette/Roulette_Search'); 
+    router.push('/Roulette/map_api'); 
   };
   const handleForm02 = () => {
     router.push('/Store_Search');
