@@ -3,12 +3,50 @@
 }
 
 .holder {
-  width: 20%;
-  height: 35px;
+  width: 400px;
+  height: 50px;
   padding: 10px;
   margin: 10px auto;
   border: 2px solid #ddd;
   border-radius: 5px;
+}
+
+
+.filterButton {
+  width: 200px;
+  height: 50px;
+  display: block; /* ボタンをブロック表示に変更 */
+  margin: 0px auto; /* 検索欄の下に余白を追加し、中央に配置 */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #45a049;
+  color: white;
+  border-radius: 5px;
+}
+
+.filterButton:hover {
+  background-color: #90ee90; /* ホバー時の色 */
+}
+
+.filterMenu {
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 50%; /* 幅を調整して中央に表示 */
+  background-color: #f9f9f9;
+  display: grid; /* グリッドレイアウトを使用 */
+  grid-template-columns: repeat(3, 1fr); /* 3列に設定 */
+  gap: 20px; /* 各チェックボックス間の間隔を調整 */
+  text-align: center; /* テキストを中央に配置 */
+}
+
+.filterMenu label {
+  display: flex; /* フレックスボックスで配置 */
+  align-items: center; /* チェックボックスとラベルを縦揃え */
+  justify-content: center; /* 中央揃え */
 }
 
 .searchResults {
@@ -31,33 +69,30 @@
   margin-bottom: 10px;
 }
 
-.shopItem p {
-  margin: 5px 0;
-}
-
-.shopImage {
-  max-width: 300px;
-  height: auto;
-  border-radius: 8px;
-  display: block;
-  margin-left: 14%; /* 画像の右にスペースを追加 */
-  margin-top: 20px;
-}
-
-/* 画像と住所を横並びに配置 */
 .imageAndAddressContainer {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 左揃え */
-  gap: 50px; /* 画像と住所の間のスペース */
+  justify-content: flex-start; /* 要素を左揃え */
+  gap: 50px; /* 画像と住所、営業時間の間隔を調整 */
+}
+
+.shopImage,
+.shopLogo {
+  max-width: 150px; /* ロゴと写真の大きさを調整 */
+  height: auto;
+  border-radius: 8px;
 }
 
 .address {
-  flex: 1; /* 画像と横並びに住所を表示 */
-  text-align: center;
+  flex: 1; /* 必要に応じて可変幅にする */
+  text-align: left;
 }
 
-/* ジャンルを右側に配置 */
+.open {
+  text-align: left;
+  flex: 1;
+}
+
 .infoContainer {
   display: flex;
   justify-content: flex-end;
@@ -67,6 +102,37 @@
 
 .genre {
   text-align: right;
-  width: auto;
-  margin-left: auto; /* 右に配置 */
+}
+.jouho{
+  font-size: 18px;
+  margin-left: 150px;
+}
+
+
+
+.searchButton:hover {
+  background-color: #90ee90;
+}
+.buttonContainer {
+  display: flex; /* フレックスボックスを使用してボタンを横に配置 */
+  justify-content: center; /* ボタンを中央揃えにする */
+  margin-top: 20px; /* 上部の余白を追加 */
+  margin-right: 720px;
+}
+
+.filterButton {
+  margin-right: 10px; /* 絞り込みボタンと検索ボタンの間にスペースを追加 */
+}
+
+.searchButton {
+  width: 200px;
+  height: 50px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  display: block; /* ブロック要素にして中央に配置 */
+  margin-left: 0; /* 左のマージンを削除 */
 }
