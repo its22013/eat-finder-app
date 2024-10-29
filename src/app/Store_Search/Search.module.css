@@ -136,3 +136,35 @@
   display: block; /* ブロック要素にして中央に配置 */
   margin-left: 0; /* 左のマージンを削除 */
 }
+
+.ScrollTop {
+  position: fixed;
+  right: 2%;
+  bottom: 10%;
+  /* margin-left: 1600px;
+  margin-bottom: 6%; */
+}
+
+.ScrollTop {
+  display: inline-block;
+  text-decoration: none;
+  color: #668ad8;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  border: solid 2px #668ad8;
+  text-align: center;
+  overflow: hidden;
+  font-weight: bold;
+  transition: .4s;
+  opacity: 40%;
+}
+
+.ScrollTop:hover {
+  background: #b3e1ff;
+}
+.pagination {
+  margin-bottom: 100px;
+  text-align: center;
+}

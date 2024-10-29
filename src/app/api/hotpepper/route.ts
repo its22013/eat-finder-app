@@ -15,11 +15,23 @@ export async function GET(req: Request) {
 
     // パラメータの組み立て
     const params = new URLSearchParams({
-        key: apikey,
+
+        key: apikey || '',
+        keyword: keyword,
+        wifi: wifi,
+        private_room: privateRoom,
+        format: 'json',
+        count: '100', // 取得件数を50に設定
+        lunch: lunch,
+        free_drink: free_d,
+        free_food: free_f,
+        parking: parking,
+        midnight: midnight,
+        service_area: service_a || ''
         lat: lat,
         lng: lng,
         range: '3', // 半径3km内を検索
-        format: 'json'
+
     });
 
     const url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${params}`;

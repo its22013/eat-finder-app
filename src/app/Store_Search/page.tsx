@@ -1,8 +1,9 @@
 'use client';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
 import { prefectures } from '../Store_Search/areaCode';
+import { TriangleUpIcon } from '@chakra-ui/icons'
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
@@ -17,11 +18,32 @@ export default function StoreSearch() {
     const [parking, setparking] = useState(false);
     const[midnight, setmidnight] = useState(false)
     const [hasSearched, setHasSearched] = useState(false);
+    const [isAtTop, setIsAtTop] = useState(true); 
+    const [currentPage, setCurrentPage] = useState(1);  
+    const perPage = 20; 
+
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            // スクロール位置が 0 ならページトップにいると判定
+            if (window.scrollY === 0) {
+                setIsAtTop(true);
+            } else {
+                setIsAtTop(false);
+            }
+        };
 
+        // スクロールイベントを監視
+        window.addEventListener('scroll', handleScroll);
+
+        // クリーンアップ関数でリスナーを削除
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
     const searchStore = async () => {
         setError(null);
         setHasSearched(true);
@@ -29,6 +51,7 @@ export default function StoreSearch() {
         if (!keyword) {
             setResults([]);
             setError('キーワードを入力してください');
+            setHasSearched(false)
             return;
         }
 
@@ -51,6 +74,7 @@ export default function StoreSearch() {
             }
             const data = await res.json();
             setResults(data.results.shop || []);
+            setCurrentPage(1);
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
@@ -60,17 +84,47 @@ export default function StoreSearch() {
             setResults([]);
         }
     };
-
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             searchStore();
+        }
+    };
+    const scrolltop = () => { window.scrollTo( {top: 0, behavior: 'smooth'} )};
+
+
+    const indexOfLastResult = currentPage * perPage;
+    const indexOfFirstResult = indexOfLastResult - perPage;
+    const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
+
+    const totalPages = Math.ceil(results.length / perPage);
+
+    // 次のページに移動
+    const nextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+            scrolltop(); // ページを変更するときにトップにスクロール
+        }
+    };
+
+    // 前のページに戻る
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            scrolltop(); // ページを変更するときにトップにスクロール
         }
     };
 
     return (
         <div className={styles.text}>
             <h1>飲食店検索</h1>
-            {/* 検索入力枠 */}
+            {/* 検索入力枠    interface ScrollToTopButtonProps {
+        footerHeight     : number
+        position         : ResponsiveValue<any>
+      }
+    const ScrollToTopButton = (props: ScrollToTopButtonProps) => {
+        const handleClick = () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }; */}
             <input
                 className={styles.holder}
                 type="text"
@@ -79,6 +133,7 @@ export default function StoreSearch() {
                 onKeyDown={handleKeyDown}
                 placeholder="キーワードを入力"
             />
+        
             <div className={styles.buttonContainer}>
             {/* 絞り込み条件ボタンを検索枠の下に配置 */}
             <button onClick={toggleFilterMenu} className={styles.filterButton}>
@@ -173,7 +228,7 @@ export default function StoreSearch() {
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             
             <ul className={styles.searchResults}>
-                {Array.isArray(results) && results.map((shop, index) => (
+                {Array.isArray(currentResults) && currentResults.map((shop, index) => (
                     <li key={index} className={styles.shopItem}>
                         <h3>{shop.name}</h3>
                         <div className={styles.imageAndAddressContainer}>
@@ -194,16 +249,35 @@ export default function StoreSearch() {
                             <div className={styles.jouho}>
                                 <p className={styles.address}>{shop.address}</p>
                                 <p className={styles.open}>営業時間: {shop.open}</p>
-                                <p>平均予算: {shop.budget.average}</p>
+                                <p>平均予算: {shop.budget?.average && shop.budget.average !== '' ? shop.budget.average : '情報なし'}</p>
+
                             </div>
                         </div>
                         <div className={styles.infoContainer}>
                             <p className={styles.genre}>ジャンル: {shop.genre.name}</p>
                         </div>
                     </li>
-                ))}
-            </ul>
 
+                ))}
+
+{totalPages > 1 && (
+        <div className={styles.pagination}>
+            <button onClick={prevPage} disabled={currentPage === 1}>
+                前のページ
+            </button>
+            <span> {currentPage} / {totalPages}</span>
+            <button onClick={nextPage} disabled={currentPage === totalPages}>
+                次のページ
+            </button>
+        </div>
+    )}
+
+                {hasSearched && !isAtTop && (
+                <div className={styles.ScrollTop}>
+                <a onClick={scrolltop}><TriangleUpIcon boxSize={34}/> </a>
+                </div>
+                    )}
+            </ul>
             <Footer />
         </div>
     );
