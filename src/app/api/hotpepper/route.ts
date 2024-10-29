@@ -21,7 +21,7 @@ export async function GET(req: Request) {
         wifi: wifi,
         private_room: privateRoom,
         format: 'json',
-        count: '50', // 取得件数を50に設定
+        count: '100', // 取得件数を50に設定
         lunch: lunch,
         free_drink: free_d,
         free_food: free_f,
