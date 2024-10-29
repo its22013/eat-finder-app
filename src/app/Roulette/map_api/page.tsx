@@ -39,7 +39,7 @@ const RestaurantMap: React.FC = () => {
           const { latitude, longitude } = pos.coords;
           setPosition([latitude, longitude]);
 
-          fetch(`/api/hotpepper?q=飲食店&lat=${latitude}&lng=${longitude}`)
+          fetch(`/api/hotpepper_geolocation?q=飲食店&lat=${latitude}&lng=${longitude}`)
             .then(res => res.json())
             .then(data => {
               if (data.results?.shop) {
