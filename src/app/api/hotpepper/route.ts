@@ -5,8 +5,8 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const keyword = searchParams.get('q') || '飲食店'; // デフォルトの検索キーワード
-    const lat = searchParams.get('lat') || '26.21079'; // デフォルト緯度
-    const lng = searchParams.get('lng') || '127.68614'; // デフォルト経度
+    const lat = searchParams.get('lat') || ''; // デフォルト緯度
+    const lng = searchParams.get('lng') || ''; // デフォルト経度
     const wifi = searchParams.get('wifi') || '0';
     const privateRoom = searchParams.get('private_room') || '0';
     const lunch = searchParams.get('lunch') || '0'; // ランチ有無の取得
@@ -15,6 +15,7 @@ export async function GET(req: Request) {
     const parking = searchParams.get('parking') || '0';
     const midnight = searchParams.get('midnight') || '0';
     const service_a = searchParams.get('service_area')
+    const range = searchParams.get('range') || '3';
     const apikey = process.env.SEARCH_API_KEY;
     if (!apikey) {
         return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
         service_area: service_a || '',
         lat: lat,
         lng: lng,
-        range: '3', // 半径3km内を検索
+        range:range, 
 
     });
 
@@ -57,3 +58,4 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 });
     }
 }
+
