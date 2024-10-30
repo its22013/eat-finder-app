@@ -9,7 +9,7 @@
   margin: 10px auto;
   border: 2px solid #ddd;
   border-radius: 5px;
-}
+} 
 
 
 .filterButton {
@@ -40,7 +40,7 @@
   display: grid; /* グリッドレイアウトを使用 */
   grid-template-columns: repeat(3, 1fr); /* 3列に設定 */
   gap: 20px; /* 各チェックボックス間の間隔を調整 */
-  text-align: center; /* テキストを中央に配置 */
+  text-align: center; 
 }
 
 .filterMenu label {

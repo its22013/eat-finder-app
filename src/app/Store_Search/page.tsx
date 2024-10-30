@@ -2,12 +2,13 @@
 import Footer from '../components/Footer';
 import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
-import { prefectures } from '../Store_Search/areaCode';
+import { prefectures , area_range} from '../Store_Search/areaCode';
 import { TriangleUpIcon } from '@chakra-ui/icons'
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
     const [selectedPrefecture, setSelectedPrefecture] = useState('');
+    const [selectedRange, setSelectedRange] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [wifi, setWifi] = useState(false);
     const [privateRoom, setPrivateRoom] = useState(false);
@@ -20,6 +21,9 @@ export default function StoreSearch() {
     const [hasSearched, setHasSearched] = useState(false);
     const [isAtTop, setIsAtTop] = useState(true); 
     const [currentPage, setCurrentPage] = useState(1);  
+    const [lng, setLng] = useState<number | null>(null);
+    const [lat, setLat] = useState<number | null>(null);
+    const [useCurrentLocation, setUseCurrentLocation] = useState(false);
     const perPage = 20; 
 
     const toggleFilterMenu = () => {
@@ -44,6 +48,25 @@ export default function StoreSearch() {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+        
+    useEffect(() => {
+        if (useCurrentLocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setLat(latitude);
+                    setLng(longitude);
+                },
+                (error) => {
+                    console.error("位置情報の取得に失敗しました:", error);
+                }
+            );
+        } else {
+            setLat(null); // Reset location if checkbox is unchecked
+            setLng(null);
+        }
+    }, [useCurrentLocation]);
+
     const searchStore = async () => {
         setError(null);
         setHasSearched(true);
@@ -56,8 +79,8 @@ export default function StoreSearch() {
         }
 
         try {
-            const params = new URLSearchParams({
-                q: keyword,
+            const paramsObject: any = {
+                q: keyword || '',
                 wifi: wifi ? '1' : '0',
                 private_room: privateRoom ? '1' : '0',
                 lunch: lunch ? '1' : '0',
@@ -65,8 +88,14 @@ export default function StoreSearch() {
                 free_food: free_f ? '1' : '0',
                 parking: parking ? '1' : '0',
                 midnight: midnight ? '1' : '0',
-                service_area: selectedPrefecture
-            });
+                service_area: selectedPrefecture,
+                lat: lat || '',
+                lng: lng || '',
+                range: selectedRange
+            };
+
+
+            const params = new URLSearchParams(paramsObject);
 
             const res = await fetch(`/api/hotpepper?${params.toString()}`);
             if (!res.ok) {
@@ -117,14 +146,6 @@ export default function StoreSearch() {
     return (
         <div className={styles.text}>
             <h1>飲食店検索</h1>
-            {/* 検索入力枠    interface ScrollToTopButtonProps {
-        footerHeight     : number
-        position         : ResponsiveValue<any>
-      }
-    const ScrollToTopButton = (props: ScrollToTopButtonProps) => {
-        const handleClick = () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }; */}
             <input
                 className={styles.holder}
                 type="text"
@@ -142,6 +163,7 @@ export default function StoreSearch() {
             <button onClick={searchStore} className={styles.searchButton}>
                     検索
             </button>
+            {!useCurrentLocation && (
             <select
                 value={selectedPrefecture}
                 onChange={(e) => setSelectedPrefecture(e.target.value)}
@@ -154,6 +176,20 @@ export default function StoreSearch() {
                     </option>
                 ))}
             </select>
+            )}
+            {useCurrentLocation && (
+                    <select
+                        value={selectedRange}
+                        onChange={(e) => setSelectedRange(e.target.value)}
+                    >
+                        <option value="">範囲を選択</option>
+                        {area_range.map((range, index) => (
+                            <option key={index} value={range.value}>
+                                {range.key}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>   
 
             {/* 絞り込みメニューの内容（開いたときに表示） */}
@@ -219,6 +255,14 @@ export default function StoreSearch() {
                             onChange={(e) => setmidnight(e.target.checked)}
                         />
                         23時以降も営業
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={useCurrentLocation}
+                            onChange={(e) => setUseCurrentLocation(e.target.checked)}
+                        />
+                        現在地から検索する
                     </label>
 
                     
