@@ -47,3 +47,10 @@ export const prefectures = [
     { name: '鹿児島', code: 'SA97', region: '九州・沖縄' },
     { name: '沖縄', code: 'SA98', region: '九州・沖縄' },
 ];
+export const area_range = [
+    {key: '300m', value: '1'},
+    {key: '500m', value: '2'} ,
+    {key: '1000m', value: '3'} ,
+    {key: '2000m', value: '4'} ,
+    {key: '3000m', value: '5'} 
+]
