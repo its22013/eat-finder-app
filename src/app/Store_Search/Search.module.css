@@ -1,170 +1,267 @@
 .text {
-  text-align: center;
+    text-align: center;
+  }
+  
+  .holder {
+    width: 400px;
+    height: 50px;
+    padding: 10px;
+    margin: 10px auto;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+  } 
+  
+  
+  .filterButton {
+    width: 200px;
+    height: 50px;
+    display: block; /* ボタンをブロック表示に変更 */
+    margin: 0px auto; /* 検索欄の下に余白を追加し、中央に配置 */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #45a049;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .filterButton:hover {
+    background-color: #90ee90; /* ホバー時の色 */
+  }
+  
+  .filterMenu {
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 50%; /* 幅を調整して中央に表示 */
+    background-color: #f9f9f9;
+    display: grid; /* グリッドレイアウトを使用 */
+    grid-template-columns: repeat(3, 1fr); /* 3列に設定 */
+    gap: 20px; /* 各チェックボックス間の間隔を調整 */
+    text-align: center; 
+  }
+  
+  .filterMenu label {
+    display: flex; /* フレックスボックスで配置 */
+    align-items: center; /* チェックボックスとラベルを縦揃え */
+    justify-content: center; /* 中央揃え */
+  }
+  
+  .searchResults {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .shopItem {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: left;
+  }
+  
+  .shopItem h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .imageAndAddressContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* 要素を左揃え */
+    gap: 50px; /* 画像と住所、営業時間の間隔を調整 */
+  }
+  
+  .shopImage,
+  .shopLogo {
+    max-width: 150px; /* ロゴと写真の大きさを調整 */
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .address {
+    flex: 1; /* 必要に応じて可変幅にする */
+    text-align: left;
+  }
+  
+  .open {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .infoContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .genre {
+    text-align: right;
+  }
+  .jouho{
+    font-size: 18px;
+    margin-left: 150px;
+  }
+  
+  
+  
+  .searchButton:hover {
+    background-color: #90ee90;
+  }
+  .buttonContainer {
+    display: flex; /* フレックスボックスを使用してボタンを横に配置 */
+    justify-content: center; /* ボタンを中央揃えにする */
+    margin-top: 20px; /* 上部の余白を追加 */
+    margin-right: 720px;
+  }
+  
+  .filterButton {
+    margin-right: 10px; /* 絞り込みボタンと検索ボタンの間にスペースを追加 */
+  }
+  
+  .searchButton {
+    width: 200px;
+    height: 50px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    display: block; /* ブロック要素にして中央に配置 */
+    margin-left: 0; /* 左のマージンを削除 */
+  }
+  
+  .ScrollTop {
+    position: fixed;
+    right: 2%;
+    bottom: 10%;
+    /* margin-left: 1600px;
+    margin-bottom: 6%; */
+  }
+  
+  .ScrollTop {
+    display: inline-block;
+    text-decoration: none;
+    color: #668ad8;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    border-radius: 50%;
+    border: solid 2px #668ad8;
+    text-align: center;
+    overflow: hidden;
+    font-weight: bold;
+    transition: .4s;
+    opacity: 40%;
+  }
+  
+  .ScrollTop:hover {
+    background: #b3e1ff;
+  }
+  .pagination {
+    margin-bottom: 100px;
+    text-align: center;
+  }
+  .modal {
+    width: 2000px;
+    height: 1500px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
 }
 
-.holder {
-  width: 400px;
-  height: 50px;
-  padding: 10px;
-  margin: 10px auto;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-} 
-
-
-.filterButton {
-  width: 200px;
-  height: 50px;
-  display: block; /* ボタンをブロック表示に変更 */
-  margin: 0px auto; /* 検索欄の下に余白を追加し、中央に配置 */
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  background-color: #45a049;
-  color: white;
-  border-radius: 5px;
+.modalOverlay {
+    /* 画面全体を覆うための設定 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
+    z-index: 9; /* モーダルの下に配置 */
 }
-
-.filterButton:hover {
-  background-color: #90ee90; /* ホバー時の色 */
+.closeB {
+    margin-left: 90%;
 }
-
-.filterMenu {
-  margin: 20px auto;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 50%; /* 幅を調整して中央に表示 */
-  background-color: #f9f9f9;
-  display: grid; /* グリッドレイアウトを使用 */
-  grid-template-columns: repeat(3, 1fr); /* 3列に設定 */
-  gap: 20px; /* 各チェックボックス間の間隔を調整 */
-  text-align: center; 
+.MODAL {
+    text-align: center;
 }
-
-.filterMenu label {
-  display: flex; /* フレックスボックスで配置 */
-  align-items: center; /* チェックボックスとラベルを縦揃え */
-  justify-content: center; /* 中央揃え */
-}
-
-.searchResults {
-  list-style-type: none;
-  padding: 0;
-}
-
-.shopItem {
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  text-align: left;
-}
-
-.shopItem h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.imageAndAddressContainer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* 要素を左揃え */
-  gap: 50px; /* 画像と住所、営業時間の間隔を調整 */
-}
-
-.shopImage,
-.shopLogo {
-  max-width: 150px; /* ロゴと写真の大きさを調整 */
-  height: auto;
-  border-radius: 8px;
-}
-
-.address {
-  flex: 1; /* 必要に応じて可変幅にする */
-  text-align: left;
-}
-
-.open {
-  text-align: left;
-  flex: 1;
-}
-
-.infoContainer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 10px;
-}
-
-.genre {
-  text-align: right;
-}
-.jouho{
-  font-size: 18px;
-  margin-left: 150px;
-}
-
-
-
-.searchButton:hover {
-  background-color: #90ee90;
-}
-.buttonContainer {
-  display: flex; /* フレックスボックスを使用してボタンを横に配置 */
-  justify-content: center; /* ボタンを中央揃えにする */
-  margin-top: 20px; /* 上部の余白を追加 */
-  margin-right: 720px;
-}
-
-.filterButton {
-  margin-right: 10px; /* 絞り込みボタンと検索ボタンの間にスペースを追加 */
-}
-
-.searchButton {
-  width: 200px;
-  height: 50px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-  display: block; /* ブロック要素にして中央に配置 */
-  margin-left: 0; /* 左のマージンを削除 */
-}
-
-.ScrollTop {
-  position: fixed;
-  right: 2%;
-  bottom: 10%;
-  /* margin-left: 1600px;
-  margin-bottom: 6%; */
-}
-
-.ScrollTop {
-  display: inline-block;
-  text-decoration: none;
-  color: #668ad8;
-  width: 100px;
-  height: 100px;
-  line-height: 100px;
-  border-radius: 50%;
-  border: solid 2px #668ad8;
-  text-align: center;
-  overflow: hidden;
-  font-weight: bold;
-  transition: .4s;
-  opacity: 40%;
-}
-
-.ScrollTop:hover {
-  background: #b3e1ff;
-}
-.pagination {
-  margin-bottom: 100px;
-  text-align: center;
-}
+/* モバイル用のスタイル */
+@media (max-width: 768px) {
+    .shopLogo{
+        display: none;
+    }
+    .text {
+      text-align: center;
+      font-size: 14px; /* テキストサイズを調整 */
+    }
+  
+    .holder {
+      width: 90%; /* 横幅を90%に設定 */
+      height: auto;
+      padding: 8px;
+      margin: 10px auto;
+      font-size: 14px; /* テキストサイズを調整 */
+    }
+  
+    .filterButton,
+    .searchButton {
+      width: 100%;
+      font-size: 14px; /* ボタンのテキストサイズを調整 */
+      height: 40px;
+    }
+  
+    .filterMenu {
+      width: 90%; /* 幅を90%に調整 */
+      grid-template-columns: repeat(2, 1fr); /* 2列に設定 */
+      gap: 10px;
+      padding: 8px;
+    }
+  
+    .shopItem {
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+  
+    .imageAndAddressContainer {
+      flex-direction: column; /* モバイルでは縦に並べる */
+      gap: 10px;
+    }
+  
+    .shopImage,
+    .shopLogo {
+      max-width: 100%; /* 画像をコンテナに合わせる */
+    }
+  
+    .buttonContainer {
+      margin-right: 0; /* ボタンを中央に揃える */
+    }
+  
+    .modal {
+      width: 90%; /* モーダルの幅を調整 */
+      height: auto; /* 高さはコンテンツに応じて自動 */
+    }
+  
+    .pagination {
+      margin-bottom: 50px; /* 下の余白を調整 */
+    }
+  
+    .ScrollTop {
+      width: 60px; /* スクロールトップボタンを小さく */
+      height: 60px;
+      line-height: 60px;
+    }
+  }
+  
