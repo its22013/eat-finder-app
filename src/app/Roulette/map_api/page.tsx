@@ -23,6 +23,7 @@ interface Store {
   lng: number;
   address: string;
   phone: string;
+  open: string;
 }
 
 const RestaurantMap: React.FC = () => {
@@ -57,16 +58,12 @@ const RestaurantMap: React.FC = () => {
                       }
                     : undefined,
                   photo: {
-                    pc: {
-                      l: shop.photo.pc.l || '',
-                      m: shop.photo.pc.m || '',
-                      s: shop.photo.pc.s || '',
-                    },
                     mobile: {
                       l: shop.photo.mobile.l || '',
                       s: shop.photo.mobile.s || '',
-                    },
+                    },     
                   },
+                  open: shop.open
                 }));
                 setStores(fetchedStores);
                 setHighlightedStore(fetchedStores[Math.floor(Math.random() * fetchedStores.length)]);
