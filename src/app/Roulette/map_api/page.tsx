@@ -102,7 +102,7 @@ const RestaurantMap: React.FC = () => {
       <Header />
       <div className={styles.container}>
         {highlightedStore && <StoreInfo store={highlightedStore} />}
-        <MapContainer center={position} zoom={14.2} className={styles.map}>
+        <MapContainer center={position} zoom={14.1} className={styles.map}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; OpenStreetMap contributors'
