@@ -5,7 +5,10 @@ import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
 import { prefectures , area_range} from '../Store_Search/areaCode';
 import { TriangleUpIcon, CloseIcon } from '@chakra-ui/icons';
-import MapView from './MapView';
+import dynamic from 'next/dynamic'; // dynamicインポートを追加
+const MapView = dynamic(() => import('./MapView'), {
+    ssr: false, // サーバーサイドレンダリングを無効にする
+});
 import  Modal from 'react-modal';
 
 Modal.setAppElement('body');
@@ -49,33 +52,33 @@ export default function StoreSearch() {
         setSelectedShop(null); // モーダルを閉じたときにショップ情報をリセット
     };
     useEffect(() => {
-        const handleScroll = () => {
-            // スクロール位置が 0 ならページトップにいると判定
-            if (window.scrollY === 0) {
-                setIsAtTop(true);
-            } else {
-                setIsAtTop(false);
-            }
-        };
-
-        // スクロールイベントを監視
-        window.addEventListener('scroll', handleScroll);
-
-        // クリーンアップ関数でリスナーを削除
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        // `typeof window !== 'undefined'` でクライアントサイドであることを確認
+        if (typeof window !== 'undefined') {
+            const handleScroll = () => {
+                if (window.scrollY === 0) {
+                    setIsAtTop(true);
+                } else {
+                    setIsAtTop(false);
+                }
+            };
+    
+            window.addEventListener('scroll', handleScroll);
+    
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        }
     }, []);
         
     useEffect(() => {
-        if (useCurrentLocation) {
+        if (typeof window !== 'undefined' && useCurrentLocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     setLat(latitude);
                     setLng(longitude);
-                    setCurrentLat(latitude);  // 現在地をcurrentLatに設定
-                    setCurrentLng(longitude); // 現在地をcurrentLngに設定
+                    setCurrentLat(latitude);
+                    setCurrentLng(longitude);
                 },
                 (error) => {
                     console.error("位置情報の取得に失敗しました:", error);
@@ -84,8 +87,8 @@ export default function StoreSearch() {
         } else {
             setLat(null);
             setLng(null);
-            setCurrentLat(null); // チェックボックスがオフのときにcurrentLatをリセット
-            setCurrentLng(null); // チェックボックスがオフのときにcurrentLngをリセット
+            setCurrentLat(null);
+            setCurrentLng(null);
         }
     }, [useCurrentLocation]);
 
