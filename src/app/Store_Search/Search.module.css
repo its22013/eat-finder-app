@@ -117,7 +117,9 @@
     display: flex; /* フレックスボックスを使用してボタンを横に配置 */
     justify-content: center; /* ボタンを中央揃えにする */
     margin-top: 20px; /* 上部の余白を追加 */
-    margin-right: 720px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
   }
   
   .filterButton {
@@ -140,7 +142,7 @@
   .ScrollTop {
     position: fixed;
     right: 2%;
-    bottom: 10%;
+    bottom: 20%;
     /* margin-left: 1600px;
     margin-bottom: 6%; */
   }
@@ -168,6 +170,9 @@
     margin-bottom: 100px;
     text-align: center;
   }
+  .icon-red { /* icon-redは最初に指定したクラス名 */
+    filter: hue-rotate(150deg);
+  }
   .modal {
     width: 2000px;
     height: 1500px;
@@ -193,16 +198,27 @@
     z-index: 9; /* モーダルの下に配置 */
 }
 .closeB {
-    margin-left: 90%;
+    margin-left: 98%;
+    background-color: transparent;
+    border: none;
+}
+.closeB:hover {
+  color: red;
 }
 .MODAL {
     text-align: center;
+}
+.Map {
+  width: 60%;
+  height: 40%px;
+  margin: 0 auto;
 }
 /* モバイル用のスタイル */
 @media (max-width: 768px) {
     .shopLogo{
         display: none;
     }
+    
     .text {
       text-align: center;
       font-size: 14px; /* テキストサイズを調整 */
@@ -246,7 +262,12 @@
     }
   
     .buttonContainer {
-      margin-right: 0; /* ボタンを中央に揃える */
+      display: flex;
+      justify-content: center;
+      margin-top: 20px; 
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
     }
   
     .modal {
