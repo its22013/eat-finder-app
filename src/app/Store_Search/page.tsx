@@ -4,9 +4,11 @@ import Footer from '../components/Footer';
 import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
 import { prefectures , area_range} from '../Store_Search/areaCode';
-import { TriangleUpIcon } from '@chakra-ui/icons';
+import { TriangleUpIcon, CloseIcon } from '@chakra-ui/icons';
+import MapView from './MapView';
 import  Modal from 'react-modal';
-Modal.setAppElement('#modal');
+
+Modal.setAppElement('body');
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
@@ -30,6 +32,8 @@ export default function StoreSearch() {
     const [selectedShop, setSelectedShop] = useState<any>(null);
     const [modal, setModal] = useState(false);
     const perPage = 20; 
+    const [currentLat, setCurrentLat] = useState<number | null>(null);
+    const [currentLng, setCurrentLng] = useState<number | null>(null);
 
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
@@ -70,14 +74,18 @@ export default function StoreSearch() {
                     const { latitude, longitude } = position.coords;
                     setLat(latitude);
                     setLng(longitude);
+                    setCurrentLat(latitude);  // 現在地をcurrentLatに設定
+                    setCurrentLng(longitude); // 現在地をcurrentLngに設定
                 },
                 (error) => {
                     console.error("位置情報の取得に失敗しました:", error);
                 }
             );
         } else {
-            setLat(null); // Reset location if checkbox is unchecked
+            setLat(null);
             setLng(null);
+            setCurrentLat(null); // チェックボックスがオフのときにcurrentLatをリセット
+            setCurrentLng(null); // チェックボックスがオフのときにcurrentLngをリセット
         }
     }, [useCurrentLocation]);
 
@@ -156,9 +164,9 @@ export default function StoreSearch() {
             scrolltop(); // ページを変更するときにトップにスクロール
         }
     };
-
+ 
     return (
-        <div className={styles.text} >
+        <div className={styles.text}>
             <h1>飲食店検索</h1>
             <input
                 className={styles.holder}
@@ -273,22 +281,39 @@ export default function StoreSearch() {
                 </div>
                     )}
             </ul>
-            <div id='modal' >
+            <div  >
             <Modal 
                 isOpen={modal}
                 onRequestClose={closeModal}
                 contentLabel="Shop Details"
                 style={{
-                    content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)', width: '700px', height: '500px' },
+                    content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)', width: '1300px', height: '900px'},
                 }}
             >
                 {selectedShop && (
                     <div className={styles.MODAL}>
-                        <button className={styles.closeB} onClick={closeModal}>閉じる</button>
+                        <button className={styles.closeB} onClick={closeModal}><CloseIcon boxSize={25}/></button>
                         <h2>{selectedShop.name}</h2>
                         <p>{selectedShop.address}</p>
-
-                        
+                        {selectedShop.photo?.pc?.l && (
+                                <img
+                                    src={selectedShop.photo.pc.l}
+                                    alt={`${selectedShop.name} photo`}
+                                    className={styles.shopImage}
+                                />
+                            )}
+                        <p>営業時間: {selectedShop.open}</p>
+                        <p>料金備考: {selectedShop.budget_memo && selectedShop.budget_memo !== '' ? selectedShop.budget_memo : '情報なし'}</p>
+                        <div className={styles.Map}>
+                        <MapView 
+                        lat={selectedShop.lat} 
+                        lng={selectedShop.lng} 
+                        shopName={selectedShop.name} 
+                        shopAddress={selectedShop.address} 
+                        currentLat={currentLat ?? 0}  // デフォルト値を設定
+                        currentLng={currentLng ?? 0}  // デフォルト値を設定
+                        />
+                        </div>
                     </div>
                 )}
             </Modal>
