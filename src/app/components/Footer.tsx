@@ -1,30 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaSearch, FaHeart, FaUserCircle } from 'react-icons/fa';
 import { FaSackDollar } from 'react-icons/fa6';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import styles from '../styles/Footer.module.css';
+import { onAuthStateChangedListener } from '../hooks/login';
 
 const Footer: React.FC = () => {
-  const pathname = usePathname(); 
-  // const router = useRouter(); 
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  
+  useEffect(() => {
+    // onAuthStateChangedListener からリスナーを登録し、unsubscribe関数を受け取る
+    const unsubscribe = onAuthStateChangedListener((user) => {
+      setIsLoggedIn(!!user);  // ユーザーが存在すればログイン状態
+    });
+
+    // コンポーネントがアンマウントされたときにリスナーを解除
+    return () => unsubscribe;
+  }, []);
+
   const isActive = (path: string) => pathname === path;
 
   return (
     <footer className={styles.footer}>
       <div className={styles.iconContainer}>
         {/* 検索ページリンク */}
-        <Link href="/" className={`${styles.iconButton} ${isActive('/') || isActive('/Roulette/Roulette_Search') || ('/Store_Search/page') ? styles.active : ''}`}>
+        <Link href="/" className={`${styles.iconButton} ${isActive('/') || isActive('/Roulette/Roulette_Search') || isActive('/Store_Search/page') ? styles.active : ''}`}>
           <FaSearch className={styles.icon} />
           <span>検索</span>
         </Link>
 
-        {/* お気に入りページリンク */}
-        <Link href="/favorites" className={`${styles.iconButton} ${isActive('/favorites') ? styles.active : ''}`}>
+        {/* お気に入りページリンク - ログインしていない場合は灰色にしてクリック不可に */}
+        <Link href={isLoggedIn ? "/favorites" : "#"} className={`${styles.iconButton} ${isActive('/favorites') ? styles.active : ''} ${!isLoggedIn ? styles.disabled : ''}`} aria-disabled={!isLoggedIn}>
           <FaHeart className={styles.icon} />
           <span>お気に入り</span>
         </Link>
