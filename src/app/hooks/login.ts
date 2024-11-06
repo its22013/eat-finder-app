@@ -20,6 +20,7 @@ export const onAuthStateChangedListener = (callback: (user: User | null) => void
 export const signOutUser = async () => {
     try {
         await auth.signOut();
+        alert("ログアウトしました")
     } catch (error) {
         console.error("Sign-out failed:", error);
     }
