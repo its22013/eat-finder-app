@@ -5,7 +5,9 @@ import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
 import { prefectures , area_range} from '../Store_Search/areaCode';
 import { TriangleUpIcon, CloseIcon } from '@chakra-ui/icons';
+import { useMediaQuery } from '@chakra-ui/react';
 import dynamic from 'next/dynamic'; // dynamicインポートを追加
+import { TiArrowRightThick, TiArrowLeftThick } from "react-icons/ti";
 const MapView = dynamic(() => import('./MapView'), {
     ssr: false, // サーバーサイドレンダリングを無効にする
 });
@@ -37,7 +39,7 @@ export default function StoreSearch() {
     const perPage = 20; 
     const [currentLat, setCurrentLat] = useState<number | null>(null);
     const [currentLng, setCurrentLng] = useState<number | null>(null);
-
+    const [isMobile] = useMediaQuery("(max-width: 768px)"); 
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
     };
@@ -237,7 +239,7 @@ export default function StoreSearch() {
 
                 {Array.isArray(currentResults) && currentResults.map((shop, index) => (
                     <li key={index} className={styles.shopItem} onClick={() => openModal(shop)}>
-                        <h3>{shop.name}</h3>
+                        <h3 className={styles.ShopName}>{shop.name}</h3>
                         <div className={styles.imageAndAddressContainer}>
                             {shop.logo_image && (
                                 <img
@@ -256,7 +258,7 @@ export default function StoreSearch() {
                             <div className={styles.jouho}>
                                 <p className={styles.address}>{shop.address}</p>
                                 <p className={styles.open}>営業時間: {shop.open}</p>
-                                <p>平均予算: {shop.budget?.average && shop.budget.average !== '' ? shop.budget.average : '情報なし'}</p>
+                                <p className={styles.ave}>平均予算: {shop.budget?.average && shop.budget.average !== '' ? shop.budget.average : '情報なし'}</p>
 
                             </div>
                         </div>
@@ -264,19 +266,19 @@ export default function StoreSearch() {
                             <p className={styles.genre}>ジャンル: {shop.genre.name}</p>
                         </div>
                     </li>
-
                 ))}
-        {totalPages > 1 && (
-        <div className={styles.pagination}>
-            <button onClick={prevPage} disabled={currentPage === 1}>
-                前のページ
-            </button>
-            <span> {currentPage} / {totalPages}</span>
-            <button onClick={nextPage} disabled={currentPage === totalPages}>
-                次のページ
-            </button>
-        </div>
-    )}
+     
+{totalPages > 1 && (
+    <div className={`${styles.pagination} ${isMobile ? styles.paginationMobile : ''}`}>
+        <button className={styles.nbButton}onClick={prevPage} disabled={currentPage === 1}>
+            <TiArrowLeftThick />
+        </button>
+        <span> {currentPage} / {totalPages}</span>
+        <button className={styles.nbButton}onClick={nextPage} disabled={currentPage === totalPages}>
+            < TiArrowRightThick />
+        </button>
+    </div>
+)}
 
                 {hasSearched && !isAtTop && (
                 <div className={styles.ScrollTop}>
@@ -284,13 +286,13 @@ export default function StoreSearch() {
                 </div>
                     )}
             </ul>
-            <div  >
+            <div>
             <Modal 
                 isOpen={modal}
                 onRequestClose={closeModal}
                 contentLabel="Shop Details"
                 style={{
-                    content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)', width: '1300px', height: '900px'},
+                    content: {        top: '50%',  left: '50%',right: 'auto',bottom: 'auto',marginRight: '-50%',transform: 'translate(-50%, -50%)',width: isMobile ? '90%' : '1300px',  height: isMobile ? '80%' : '900px',},
                 }}
             >
                 {selectedShop && (

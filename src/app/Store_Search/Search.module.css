@@ -213,12 +213,34 @@
   height: 40%px;
   margin: 0 auto;
 }
+.nbButton {
+  border: none;
+  background-color: #fff;
+  font-size: 15px;
+}
+.nbButton:hover{
+  font-size: 20px;
+}
 /* モバイル用のスタイル */
 @media (max-width: 768px) {
     .shopLogo{
         display: none;
     }
-    
+    .ShopName {
+      text-align: center; 
+    }
+    .ave{
+      text-align: center;
+      margin-right:100px;
+    }
+    .address{
+      text-align: center;
+      margin-right: 100px;
+    }
+    .open{
+      text-align: center;
+      margin-right: 100px;
+    }
     .text {
       text-align: center;
       font-size: 14px; /* テキストサイズを調整 */
@@ -276,8 +298,14 @@
     }
   
     .pagination {
-      margin-bottom: 50px; /* 下の余白を調整 */
-    }
+      display: flex;
+      justify-content: center;
+      margin: 20px 0; /* デフォルトの余白 */
+  }
+  
+  .paginationMobile {
+      margin-bottom: 85px; /* モバイルの場合の下余白 */
+  }
   
     .ScrollTop {
       width: 60px; /* スクロールトップボタンを小さく */
