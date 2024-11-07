@@ -13,7 +13,7 @@ const SearchOptions: React.FC = () => {
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
   const router = useRouter();
 
-  const categories = ["居酒屋", "焼肉・ホルモン", "韓国料理", "和食", "中華"];
+  const categories = ["居酒屋", "焼肉・ホルモン", "韓国料理", "和食", "中華", "ダイニングバー・バル", "創作料理", "洋食", "アジア・エスニック料理", "各国料理", "カラオケ・パーティ", "バー・カクテル", "ラーメン", "カフェ・スイーツ", "その他グルメ", "お好み焼き・もんじゃ"];
 
   // rangeの値に基づく半径のマッピング
   const radiusMap: { [key: string]: number } = {
@@ -82,6 +82,9 @@ const SearchOptions: React.FC = () => {
         <option value="10">10件 (デフォルト)</option>
         <option value="20">20件</option>
         <option value="30">30件</option>
+        <option value="40">40件</option>
+        <option value="50">50件</option>
+        <option value="100">100件</option>
       </select>
 
       <button className={styles.search_button} onClick={handleSearch}>検索</button>
