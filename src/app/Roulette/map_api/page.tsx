@@ -160,6 +160,23 @@ const RestaurantMap: React.FC = () => {
       .finally(() => setLoadingStores([]));
   };
 
+  const getRadius = (range: string): number => {
+    switch (range) {
+      case '1':
+        return 300; // 300m
+      case '2':
+        return 500; // 500m
+      case '3':
+        return 1000; // 1km
+      case '4':
+        return 1500; // 2km
+      case '5':
+        return 3000; // 3km
+      default:
+        return 1000; // デフォルトは1km
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -177,7 +194,7 @@ const RestaurantMap: React.FC = () => {
               {position && (
                 <>
                   <UserLocation position={position} />
-                  <Circle center={position} radius={1000} color="red" fillOpacity={0.2} />
+                  <Circle center={position} radius={getRadius(range)} color="red" fillOpacity={0.2} />
                   {highlightedStore && (
                     <Circle center={[highlightedStore.lat, highlightedStore.lng]} radius={75} color="blue" fillOpacity={0.3} />
                   )}
