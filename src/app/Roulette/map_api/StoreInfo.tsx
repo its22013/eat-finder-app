@@ -47,10 +47,6 @@ const StoreInfo: React.FC<{ store: Store }> = ({ store }) => {
         <div className={styles.Business_text}>
         {displayOpenHours} 
         </div>
-        {/* Google Maps リンクを「マップで表示」に変更 */}
-        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.address_link}>
-          マップで表示
-        </a><br />
       </div>
     
       <div className={styles.text_container}>
@@ -60,9 +56,11 @@ const StoreInfo: React.FC<{ store: Store }> = ({ store }) => {
           <RiMoneyCnyCircleFill />{store.budget?.name}
         </p><br />
 
-          
         <div className={styles.sub_container}>
-        <p>▶詳細はこちら</p>
+        {/* Google Maps リンクを「マップで表示」に変更 */}
+        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.address_link}>
+        　マップで表示
+        </a>
         <div className={styles.heart_icon}>
         <IoMdHeart />
         </div>
