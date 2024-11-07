@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 
@@ -44,16 +44,18 @@
 /* 飲食店情報のスタイル */
 .store_info {
   margin-top: 10px;
-  display: flex;
-  background-color: #FFECBD;
-  padding: 10px;
-  padding-top: 25px;
-  padding-left: 24px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 100%;
+    display: flex;
+    background-color: #FFECBD;
+    padding: 10px;
+    padding-top: 25px;
+    padding-left: 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 75%;
+    height: 70%;
+    margin-left: 3%;
+    margin-right: 5%;
+    margin-bottom: 5%;
 }
 
 /* 飲食店 */
@@ -95,7 +97,8 @@
 .text_container {
   display: flex;
   flex-direction: column;
-  margin-left: 33px;
+  margin-left: 10%;
+  justify-content: space-evenly;
 }
 
 /* 住所リンクのスタイル */
@@ -103,8 +106,8 @@
   color: #007bff;
   text-decoration: underline;
   font-size: 13px;
-  position: fixed;
   margin-top: 9px;
+  text-decoration: none;
 }
 
 .address_link:hover {
@@ -148,7 +151,7 @@
 .header {
   flex-shrink: 0;
   background-image: url('/images/Roulette_Search.png');
-  color: white;
+  color: #2b2b2b;
   padding: 15px;
   text-align: center;
   font-size: 26px;
@@ -167,11 +170,49 @@
 
 .heart_icon {
   font-size: 50px;
-  color: rgb(220, 220, 220);
+  color: pink;
+  
 }
 
 .heart_icon:hover {
   color: deeppink;
+}
+
+.backButton {
+  position: fixed;
+  bottom: 100px;
+  left: 20px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.backButton:hover {
+  background-color: #0056b3;
+}
+
+.storeCount {
+  display: flex;
+  position: fixed;
+  right: 9px;
+  top: 20%;
+  background-color: #ffffff;
+  font-size: 22px;
+  border-radius: 8px;
+  justify-content: center;
+  width: 60px;
+}
+
+.storeCount_text {
+  display: flex;
+}
+
+.sub_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 @media (max-width: 600px) {
@@ -249,8 +290,32 @@
   .heart_icon {
     font-size: 45px;
     position: fixed;
-    right: 24px;
+    left: 80%;
     top: 275px;
     color: pink;
+  }
+  .address_link {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 13px;
+    margin-top: 9px;
+    margin-right: 65px;
+    text-decoration: none;
+  }
+  /* 取得した飲食店の件数表示 */
+  .storeCount {
+    display: flex;
+    position: fixed;
+    right: 9px;
+    top: 52%;
+    background-color: #ffffff;
+    font-size: 22px;
+    border-radius: 8px;
+    justify-content: center;
+    width: 60px;
+  }
+
+  .storeCount_text {
+    display: flex;
   }
 }
