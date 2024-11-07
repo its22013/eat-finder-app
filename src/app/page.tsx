@@ -8,7 +8,7 @@ import Header from './components/Header'
 const Home: React.FC = () => {
   const router = useRouter(); 
   const handleForm01 = () => {
-    router.push('/Roulette/map_api'); 
+    router.push('/Roulette/map_api/Restran_opthon'); 
   };
   const handleForm02 = () => {
     router.push('/Store_Search');

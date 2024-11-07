@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from '../styles/Footer.module.css';
 import { onAuthStateChangedListener } from '../hooks/login';
+import { IoHome } from 'react-icons/io5';
 
 const Footer: React.FC = () => {
   const pathname = usePathname();
@@ -28,9 +29,9 @@ const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.iconContainer}>
         {/* 検索ページリンク */}
-        <Link href="/" className={`${styles.iconButton} ${isActive('/') || isActive('/Roulette/Roulette_Search') || isActive('/Store_Search/page') ? styles.active : ''}`}>
-          <FaSearch className={styles.icon} />
-          <span>検索</span>
+        <Link href="/" className={`${styles.iconButton} ${isActive('/') || isActive('/Roulette/map_api') || isActive('/Roulette/map_api/Restran_opthon') || isActive('/Store_Search/page') ? styles.active : ''}`}>
+          <IoHome className={styles.icon} />
+          <span>Home</span>
         </Link>
 
         {/* お気に入りページリンク - ログインしていない場合は灰色にしてクリック不可に */}
