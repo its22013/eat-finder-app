@@ -228,6 +228,15 @@
     width: 100%;
     position: fixed;
   }
+
+  .genre_text {
+    text-align: center;
+    font-size: 12px;
+    border-radius: 2px;
+    width: 82%;
+    background-color: #fdfdfd;
+  }
+
   /* 飲食店情報のスタイル */
   .store_info {
     margin-top: 15px;
@@ -261,6 +270,9 @@
     border-radius: 3px;
   }
 
+  .average_text {
+    width: 140px;
+  }
 
   /* 店舗写真のコンテナ */
   .images_container {
@@ -294,17 +306,23 @@
   .heart_icon {
     font-size: 45px;
     position: fixed;
+    cursor: pointer;
     left: 80%;
     top: 275px;
-    color: pink;
+    color: rgb(185, 185, 185);
+  }
+
+  .heart_icon.favorited {
+    color: rgba(255, 0, 200, 0.559);
   }
   .address_link {
     color: #007bff;
     text-decoration: underline;
-    font-size: 13px;
-    margin-top: 9px;
+    font-size: 13px;;
     margin-right: 65px;
     text-decoration: none;
+    position: fixed;
+    top: 45%;
   }
   /* 取得した飲食店の件数表示 */
   .storeCount {

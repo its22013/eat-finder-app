@@ -26,13 +26,12 @@ const SearchOptions: React.FC = () => {
 
   const handleSearch = () => {
     const categoryQuery = selectedCategory || '';
-    const budgetQuery = budget || '';
     const rangeQuery = range || '3';
     const numResultsQuery = numResults || '10';
 
     if (currentLocation) {
       // 検索パラメータにrange（半径）を含めてURLに渡す
-      router.push(`/Roulette/map_api?category=${encodeURIComponent(categoryQuery)}&budget=${encodeURIComponent(budgetQuery)}&range=${encodeURIComponent(rangeQuery)}&numResults=${encodeURIComponent(numResultsQuery)}&lat=${currentLocation.lat}&lng=${currentLocation.lng}`);
+      router.push(`/Roulette/map_api?category=${encodeURIComponent(categoryQuery)}&range=${encodeURIComponent(rangeQuery)}&numResults=${encodeURIComponent(numResultsQuery)}&lat=${currentLocation.lat}&lng=${currentLocation.lng}`);
     } else {
       alert('現在地を取得できませんでした。');
     }
@@ -85,6 +84,7 @@ const SearchOptions: React.FC = () => {
         <option value="40">40件</option>
         <option value="50">50件</option>
         <option value="100">100件</option>
+        <option value="150">150件</option>
       </select>
 
       <button className={styles.search_button} onClick={handleSearch}>検索</button>
