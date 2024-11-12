@@ -9,6 +9,7 @@ interface Store {
   address: string;
   phone: string;
   open: string;
+  genre: string;
 }
 
 const customIcon = L.icon({
