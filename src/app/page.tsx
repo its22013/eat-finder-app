@@ -1,17 +1,30 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '@/app/components/Footer';
 import style from '@/app/home.module.css';
 import { useRouter } from 'next/navigation'; 
+
 const Home: React.FC = () => {
-  const router = useRouter(); 
+  const router = useRouter();
+  const [isClient, setIsClient] = useState(false); // クライアントサイドかどうかのフラグ
+
+  useEffect(() => {
+    setIsClient(true); // クライアントサイドでレンダリングが始まったらフラグを更新
+  }, []);
+
   const handleForm01 = () => {
     router.push('/Roulette/map_api/Restran_opthon'); 
   };
+
   const handleForm02 = () => {
     router.push('/Store_Search');
   };
+
+  if (!isClient) {
+    // クライアントサイドでの初回レンダリングを待つ
+    return null;
+  }
 
   return (
     <div>
@@ -33,7 +46,7 @@ const Home: React.FC = () => {
         </div>
       </main>
       <Footer />
-      </div>
+    </div>
   );
 };
 
