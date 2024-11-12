@@ -4,7 +4,6 @@ import React from 'react';
 import Footer from '@/app/components/Footer';
 import style from '@/app/home.module.css';
 import { useRouter } from 'next/navigation'; 
-import Header from './components/Header'
 const Home: React.FC = () => {
   const router = useRouter(); 
   const handleForm01 = () => {
@@ -16,7 +15,6 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <main>
         <div className={style.container}>
           <h1 className={style.text01}>Eats Finder へようこそ！</h1>
@@ -35,7 +33,7 @@ const Home: React.FC = () => {
         </div>
       </main>
       <Footer />
-    </div>
+      </div>
   );
 };
 

@@ -1,0 +1,108 @@
+/* Login.module.css */
+.modalContent {
+  width: 700px !important;
+  height: 600px !important;
+  background-color: white;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modalBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; /* ModalBody と ModalFooter の間隔を開ける */
+}
+
+.modalFooter {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hed {
+  margin-bottom: 10%;
+}
+.bod {
+  margin-bottom: 7%;
+}
+.loginB {
+  margin-bottom: 8%;
+}
+
+.closeB {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+}
+
+.closeB:hover {
+  color: red;
+}
+
+.text {
+  margin-left: 50px;
+  margin-bottom: 15px;
+}
+.emailform {
+  margin-bottom: 15px;
+} 
+.pass {
+  margin-left: 50px;
+  margin-bottom: 15px;
+  
+}
+
+.btn{
+  margin-bottom: 40px;
+  border-radius: 3px;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: #FFF;
+  transition: 0.3s ease-in-out;
+  font-weight: 600;
+  background: rgb(149,202,252);
+  background: linear-gradient(270deg, rgba(149,202,252,1) 0%, rgba(107,182,255,1) 100%);
+  border:none;
+  width: 100px;
+  height:30px;
+}
+.btn:hover{
+  background: rgb(117,188,255);
+  background: linear-gradient(270deg, rgba(117,188,255,1) 0%, rgba(62,159,252,1) 100%);
+}
+.btnGoogle{
+  margin-bottom: 40px;
+  border-radius: 3px;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: #FFF;
+  transition: 0.3s ease-in-out;
+  font-weight: 600;
+  background: rgb(149,202,252);
+  background: linear-gradient(270deg, rgba(149,202,252,1) 0%, rgba(107,182,255,1) 100%);
+  border:none;
+  width: 140px;
+  height:40px;
+}
+.btnGoogle:hover{
+  background: rgb(117,188,255);
+  background: linear-gradient(270deg, rgba(117,188,255,1) 0%, rgba(62,159,252,1) 100%);
+}

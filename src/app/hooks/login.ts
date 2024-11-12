@@ -12,9 +12,10 @@ export const signInWithGoogle = async () => {
 };
 
 // ログイン状態の監視
+
 export const onAuthStateChangedListener = (callback: (user: User | null) => void) => {
-    onAuthStateChanged(auth, callback);
-};
+    return onAuthStateChanged(auth, callback);
+  };
 
 // ログアウト処理
 export const signOutUser = async () => {
