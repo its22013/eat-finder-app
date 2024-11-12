@@ -1,0 +1,130 @@
+.favorites_container {
+    max-height: 100vh;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.title_container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.h1 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.favorites_list {
+    list-style: none;
+    padding: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.favorite_item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 25px;
+    transition: box-shadow 0.3s ease;
+}
+
+.favorite_item:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.favorite_item h2 {
+    font-size: 20px;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+.favorite_item p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.operating_hours {
+    margin-top: 20px;
+}
+
+.operating_hours table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.operating_hours th,
+.operating_hours td {
+    text-align: center;
+    padding: 10px;
+}
+
+.operating_hours th {
+    background-color: #f2f2f2;
+}
+
+.operating_hours .status {
+    margin-bottom: 5px;
+}
+
+.operating_hours .open {
+    background-color: green;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding-top: 12px;
+    padding-bottom: 20px;
+    background-color: #ffffff;
+    position: sticky;
+    bottom: 83px;
+}
+
+.pagination button {
+    background-color: #ddd;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.pagination .activePage {
+    background-color: #333;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .title_container {
+        display: flex;
+        justify-content: center;
+        background-color: #ffd147;
+        height: 65px;
+        align-items: center;
+    }
+
+    .title_text {
+        font-size: 20px;
+    }
+
+    .favorites_list {
+        max-height: calc(100vh - 130px); /* タイトルとページネーションの高さを除く */
+        overflow-y: auto;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        padding-top: 12px;
+        padding-bottom: 8px;
+        background-color: #ffffff;
+        position: sticky;
+        bottom: 15%;
+    }
+}

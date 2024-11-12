@@ -1,0 +1,85 @@
+/* OperatingHours.module.css */
+
+.operatingHours {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHeader, .cell {
+    width: 100px; /* Ensure all cells have the same width */
+    padding: 16px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .today {
+    background-color: #ffeb3b; /* 今日の曜日セルを強調表示 */
+  }
+  
+  .openStatus {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+    margin: 0 auto;
+  }
+  .timeText {
+    margin-top: 8px;
+    font-weight: bold;
+  }
+  @media (max-width: 600px) {
+    .operatingHours {
+        text-align: center;
+        margin: 20px;
+        overflow-x: auto; /* モバイルで横スクロールを有効化 */
+        max-width: 100%; /* 画面サイズに収まるように幅を制限 */
+    }
+    
+    .table {
+        width: 100%;
+        min-width: 500px; /* モバイルでの最小幅を調整 */
+        border-collapse: collapse;
+    }
+    
+    .tableHeader, .cell {
+        width: 70px; /* セル幅を小さくしてコンパクトに表示 */
+        padding: 8px; /* パディングを小さく調整 */
+        border: 1px solid #ccc;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 12px; /* フォントサイズを小さくして情報を詰め込む */
+    }
+    
+    .tableHeader {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+    
+    .cell {
+        height: 60px; /* セルの高さを小さく調整 */
+    }
+    
+    .today {
+        background-color: #ffeb3b; /* 今日の曜日セルを強調表示 */
+    }
+    
+    .openStatus {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: green;
+        margin: 0 auto;
+    }
+    
+    .timeText {
+        margin-top: 4px; /* マージンを縮小 */
+        font-weight: bold;
+        font-size: 10px; /* フォントサイズを小さく調整 */
+    }
+}

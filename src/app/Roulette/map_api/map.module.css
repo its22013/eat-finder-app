@@ -171,7 +171,7 @@
 
 .heart_icon {
   font-size: 50px;
-  color: pink;
+  color: rgb(185, 185, 185);
   position: absolute; /* 枠内で絶対位置 */
   bottom: 10px; /* 下から10px */
   right: 10px; /* 右から10px */
@@ -179,7 +179,11 @@
 }
 
 .heart_icon:hover {
-  color: deeppink;
+  color: rgba(255, 0, 200, 0.559);
+}
+
+.heart_icon.favorited {
+  color: rgba(255, 0, 200, 0.559);
 }
 
 .backButton {
