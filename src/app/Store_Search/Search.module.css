@@ -295,7 +295,7 @@
     }
   
     .modal {
-      width: 90%; /* モーダルの幅を調整 */
+      width: 95%; /* モーダルの幅を調整 */
       height: auto; /* 高さはコンテンツに応じて自動 */
     }
   
@@ -306,7 +306,7 @@
   }
   
   .paginationMobile {
-      margin-bottom: 85px; /* モバイルの場合の下余白 */
+      margin-bottom: 120px; /* モバイルの場合の下余白 */
   }
   
     .ScrollTop {
