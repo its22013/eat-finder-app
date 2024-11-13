@@ -46,6 +46,7 @@ const Mypage: React.FC = () => {
                 </div>
             ) : (
                 <div className={styles.off_mypage}>
+                <div>
                     <p>ログインしていません。</p>
                     <button onClick={handleLoginRedirect} className={styles.button}>ログインページへ</button>
                 </div>

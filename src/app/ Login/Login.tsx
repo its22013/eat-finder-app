@@ -56,16 +56,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      // 画面幅が768px以下（スマホ）の場合はリダイレクト方式でログイン
-      if (window.innerWidth <= 768) {
-        await signInWithRedirect(auth, googleProvider);
-      } else {
         await signInWithPopup(auth, googleProvider);
-      }
       onClose();
     } catch (error) {
       setError("Googleアカウントでのログインに失敗しました");
       console.error("Google sign-in failed:", error);
+      alert('google error ');
     }
   };
 
