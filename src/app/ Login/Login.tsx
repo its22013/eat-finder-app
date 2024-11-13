@@ -56,11 +56,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      // クライアントサイド確認後に、画面幅によるGoogleログインの方法を分岐
-      if (isClient && window.innerWidth > 768) {
-        await signInWithPopup(auth, googleProvider);
-      } else {
+      // 画面幅が768px以下（スマホ）の場合はリダイレクト方式でログイン
+      if (window.innerWidth <= 768) {
         await signInWithRedirect(auth, googleProvider);
+      } else {
+        await signInWithPopup(auth, googleProvider);
       }
       onClose();
     } catch (error) {
@@ -117,9 +117,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               <Button className={styles.btn} colorScheme="blue" onClick={handleEmailLogin}>
                 ログイン
               </Button>
-              <Button className={styles.btnGoogle} colorScheme="red" onClick={handleGoogleLogin}>
-                Googleでログイン
-              </Button>
+              <Button className={styles.btnGoogle} colorScheme="red" onClick={handleGoogleLogin}
+                leftIcon={<img src='/images/web_Google.png' alt="Google icon" width={20} height={20} />}>
+                Sign in with Google
+               </Button>
             </>
           )}
         </ModalFooter>
@@ -141,4 +142,3 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 };
 
 export default LoginModal;
-
