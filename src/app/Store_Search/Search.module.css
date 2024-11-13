@@ -253,7 +253,9 @@
       margin: 10px auto;
       font-size: 14px; /* テキストサイズを調整 */
     }
-  
+  .jouho {
+    margin: 0 auto;
+  }
     .filterButton,
     .searchButton {
       width: 100%;

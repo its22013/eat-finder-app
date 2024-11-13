@@ -14,7 +14,7 @@ import {
   FormLabel,
   Text,
 } from '@chakra-ui/react';
-import { signInWithPopup, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, googleProvider } from '../hooks/firebase';
 import { onAuthStateChangedListener } from '../hooks/login';
 import styles from './Login.module.css';
