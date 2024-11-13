@@ -108,8 +108,8 @@
 }
 @media (max-width: 768px) {
   .modalContent {
-    width: 500px !important;
-    height: 600px !important;
+    width: 90% !important;
+    height: 60% !important;
     background-color: white;
     position: fixed !important;
     top: 50% !important;
