@@ -56,7 +56,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      // デバイスがモバイルの場合はリダイレクトでログインする
+      // 画面幅が768px以下（スマホ）の場合はリダイレクト方式でログイン
       if (window.innerWidth <= 768) {
         await signInWithRedirect(auth, googleProvider);
       } else {
@@ -142,4 +142,3 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 };
 
 export default LoginModal;
-
