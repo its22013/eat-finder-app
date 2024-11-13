@@ -102,11 +102,15 @@
 
 @media (max-width: 600px) {
     .title_container {
+        position: fixed;
+        top: 0px;
+        width: 100%;
         display: flex;
-        justify-content: center;
         background-color: #ffd147;
         height: 65px;
         align-items: center;
+        flex-direction: row;
+        justify-content: center;
     }
 
     .title_text {
@@ -114,8 +118,7 @@
     }
 
     .favorites_list {
-        max-height: calc(100vh - 130px); /* タイトルとページネーションの高さを除く */
-        overflow-y: auto;
+        margin-top: 20%;
     }
     .pagination {
         display: flex;
