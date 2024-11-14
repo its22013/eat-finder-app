@@ -104,3 +104,22 @@
   background: rgb(117,188,255);
   background: linear-gradient(270deg, rgba(117,188,255,1) 0%, rgba(62,159,252,1) 100%);
 }
+@media (max-width: 768px) {
+  .modalContent {
+    width: 90% !important;
+    height: 75% !important;
+    background-color: white;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+}

@@ -221,6 +221,7 @@
 .nbButton:hover{
   font-size: 20px;
 }
+
 /* モバイル用のスタイル */
 @media (max-width: 768px) {
     .shopLogo{
@@ -253,7 +254,9 @@
       margin: 10px auto;
       font-size: 14px; /* テキストサイズを調整 */
     }
-  
+  .jouho {
+    margin: 0 auto;
+  }
     .filterButton,
     .searchButton {
       width: 100%;
@@ -293,7 +296,7 @@
     }
   
     .modal {
-      width: 90%; /* モーダルの幅を調整 */
+      width: 95%; /* モーダルの幅を調整 */
       height: auto; /* 高さはコンテンツに応じて自動 */
     }
   
@@ -304,7 +307,7 @@
   }
   
   .paginationMobile {
-      margin-bottom: 85px; /* モバイルの場合の下余白 */
+      margin-bottom: 120px; /* モバイルの場合の下余白 */
   }
   
     .ScrollTop {
@@ -312,5 +315,8 @@
       height: 60px;
       line-height: 60px;
     }
+  .closeB {
+    margin-left:95%;
+  }
   }
   

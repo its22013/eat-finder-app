@@ -12,6 +12,7 @@ const MapView = dynamic(() => import('./MapView'), {
     ssr: false, // サーバーサイドレンダリングを無効にする
 });
 import  Modal from 'react-modal';
+import { color } from 'framer-motion';
 
 Modal.setAppElement('body');
 export default function StoreSearch() {
@@ -172,7 +173,7 @@ export default function StoreSearch() {
  
     return (
         <div className={styles.text}>
-            <h1>飲食店検索</h1>
+            <h1>キーワード検索</h1>
             <input
                 className={styles.holder}
                 type="text"
@@ -267,7 +268,13 @@ export default function StoreSearch() {
                         </div>
                     </li>
                 ))}
-     
+                   
+                   {hasSearched && (
+    <p>
+        Powered by <a href="http://webservice.recruit.co.jp/" style={{ color: 'blue', textDecoration: 'underline' }}>ホットペッパーグルメ Webサービス</a>
+    </p>
+)}
+
 {totalPages > 1 && (
     <div className={`${styles.pagination} ${isMobile ? styles.paginationMobile : ''}`}>
         <button className={styles.nbButton}onClick={prevPage} disabled={currentPage === 1}>
@@ -279,6 +286,7 @@ export default function StoreSearch() {
         </button>
     </div>
 )}
+
 
                 {hasSearched && !isAtTop && (
                 <div className={styles.ScrollTop}>
