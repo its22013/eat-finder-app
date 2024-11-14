@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { FaSearch, FaHeart, FaUserCircle } from 'react-icons/fa';
-import { FaSackDollar } from 'react-icons/fa6';
+import { MdOutlineHistory } from "react-icons/md";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from '../styles/Footer.module.css';
@@ -46,9 +46,9 @@ const Footer: React.FC = () => {
           <span>お気に入り</span>
         </Link>
 
-        <Link href="/money_plan" className={`${styles.iconButton} ${isActive('/money_plan') ? styles.active : ''}`}>
-          <FaSackDollar className={styles.icon} />
-          <span>食費プラン</span>
+        <Link href="/money_plan" className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''}`}>
+          <MdOutlineHistory className={styles.icon} />
+          <span>履歴</span>
         </Link>
 
         <Link

@@ -15,6 +15,7 @@ interface Store {
   address: string;
   phone: string;
   genre: string;
+  url?: string;
   budget?: {
     code: string;
     name: string;
