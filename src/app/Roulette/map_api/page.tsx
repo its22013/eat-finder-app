@@ -28,6 +28,14 @@ interface Store {
   phone: string;
   open: string;
   genre: string;
+  url?: string;
+  photo?: {
+    mobile?: {
+      l: string;
+      s: string;
+    };
+  };
+  
 }
 
 const RestaurantMap: React.FC = () => {
@@ -65,6 +73,8 @@ const RestaurantMap: React.FC = () => {
         phone: store.phone,
         open: store.open,
         genre: store.genre,
+        url: store.url,
+        photoUrl: store.photo?.mobile?.l,
       });
       alert('お気に入りに追加しました！');
       console.log('お気に入りに追加しました:', store.name);
@@ -188,6 +198,7 @@ const handleSearch = (latitude: number, longitude: number) => {
     phone: 'ランダム電話番号',
     open: '24時間営業',
     genre: 'ジャンル不明',
+    url: 'https://dummyurl.com',
   }));
   setLoadingStores(dummyStores);
 
@@ -203,6 +214,7 @@ const handleSearch = (latitude: number, longitude: number) => {
           phone: shop.tel || '電話番号不明',
           genre: shop.genre?.name || 'ジャンル不明',
           open: shop.open,
+          url: shop.urls?.pc || '',
           budget: shop.budget
                   ? {
                       code: shop.budget.code || '不明',
