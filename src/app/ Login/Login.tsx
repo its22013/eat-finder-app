@@ -85,7 +85,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <FormControl mb={4}>
             <FormLabel className={styles.text}>メールアドレス</FormLabel>
             <Input
-              className={styles.emailform}
+              className={styles.form}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -93,8 +93,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             />
           </FormControl>
           <FormControl mb={4}>
-            <FormLabel className={styles.pass}>パスワード</FormLabel>
+            <FormLabel className={styles.text}>パスワード</FormLabel>
             <Input
+              className={styles.form}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
