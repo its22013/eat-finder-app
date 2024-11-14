@@ -221,6 +221,7 @@
 .nbButton:hover{
   font-size: 20px;
 }
+
 /* モバイル用のスタイル */
 @media (max-width: 768px) {
     .shopLogo{
