@@ -1,10 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { FaSearch, FaHeart, FaUserCircle } from 'react-icons/fa';
+import { FaHeart, FaUserCircle } from 'react-icons/fa';
 import { MdOutlineHistory } from "react-icons/md";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from '../styles/Footer.module.css';
+import styles from './Footer.module.css';
 import { onAuthStateChangedListener } from '../hooks/login';
 import { IoHome } from 'react-icons/io5';
 import { useDisclosure } from '@chakra-ui/react';
