@@ -1,9 +1,20 @@
+
 'use client';
 import Footer from '../components/Footer';
 import { useState, useEffect } from 'react';
 import styles from '../Store_Search/Search.module.css';
 import { prefectures , area_range} from '../Store_Search/areaCode';
-import { TriangleUpIcon } from '@chakra-ui/icons'
+import { TriangleUpIcon, CloseIcon } from '@chakra-ui/icons';
+import { useMediaQuery } from '@chakra-ui/react';
+import dynamic from 'next/dynamic'; // dynamicインポートを追加
+import { TiArrowRightThick, TiArrowLeftThick } from "react-icons/ti";
+const MapView = dynamic(() => import('./MapView'), {
+    ssr: false, // サーバーサイドレンダリングを無効にする
+});
+import  Modal from 'react-modal';
+import { color } from 'framer-motion';
+
+Modal.setAppElement('body');
 export default function StoreSearch() {
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
@@ -24,46 +35,63 @@ export default function StoreSearch() {
     const [lng, setLng] = useState<number | null>(null);
     const [lat, setLat] = useState<number | null>(null);
     const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+    const [selectedShop, setSelectedShop] = useState<any>(null);
+    const [modal, setModal] = useState(false);
     const perPage = 20; 
-
+    const [currentLat, setCurrentLat] = useState<number | null>(null);
+    const [currentLng, setCurrentLng] = useState<number | null>(null);
+    const [isMobile] = useMediaQuery("(max-width: 768px)"); 
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
     };
+ 
+    const openModal = (shop: any) => {
+        setSelectedShop(shop); // 選択したショップの情報を設定
+        setModal(true);
+    };
 
+    const closeModal = () => {
+        setModal(false);
+        setSelectedShop(null); // モーダルを閉じたときにショップ情報をリセット
+    };
     useEffect(() => {
-        const handleScroll = () => {
-            // スクロール位置が 0 ならページトップにいると判定
-            if (window.scrollY === 0) {
-                setIsAtTop(true);
-            } else {
-                setIsAtTop(false);
-            }
-        };
-
-        // スクロールイベントを監視
-        window.addEventListener('scroll', handleScroll);
-
-        // クリーンアップ関数でリスナーを削除
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        // `typeof window !== 'undefined'` でクライアントサイドであることを確認
+        if (typeof window !== 'undefined') {
+            const handleScroll = () => {
+                if (window.scrollY === 0) {
+                    setIsAtTop(true);
+                } else {
+                    setIsAtTop(false);
+                }
+            };
+    
+            window.addEventListener('scroll', handleScroll);
+    
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        }
     }, []);
         
     useEffect(() => {
-        if (useCurrentLocation) {
+        if (typeof window !== 'undefined' && useCurrentLocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     setLat(latitude);
                     setLng(longitude);
+                    setCurrentLat(latitude);
+                    setCurrentLng(longitude);
                 },
                 (error) => {
                     console.error("位置情報の取得に失敗しました:", error);
                 }
             );
         } else {
-            setLat(null); // Reset location if checkbox is unchecked
+            setLat(null);
             setLng(null);
+            setCurrentLat(null);
+            setCurrentLng(null);
         }
     }, [useCurrentLocation]);
 
@@ -142,10 +170,10 @@ export default function StoreSearch() {
             scrolltop(); // ページを変更するときにトップにスクロール
         }
     };
-
+ 
     return (
         <div className={styles.text}>
-            <h1>飲食店検索</h1>
+            <h1>キーワード検索</h1>
             <input
                 className={styles.holder}
                 type="text"
@@ -194,87 +222,25 @@ export default function StoreSearch() {
 
             {/* 絞り込みメニューの内容（開いたときに表示） */}
             {isFilterOpen && (
-                <div className={styles.filterMenu}>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={wifi}
-                            onChange={(e) => setWifi(e.target.checked)}
-                        />
-                        Wi-Fi有り
-                    </label>
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={privateRoom}
-                            onChange={(e) => setPrivateRoom(e.target.checked)}
-                        />
-                        個室有り
-                    </label>
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={lunch}
-                            onChange={(e) => setLunch(e.target.checked)}
-                        />
-                        ランチ有り
-                    </label>
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={free_d}
-                            onChange={(e) => setFree_d(e.target.checked)}
-                        />
-                        飲み放題有り
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={free_f}
-                            onChange={(e) => setfree_f(e.target.checked)}
-                        />
-                        食べ放題有り
-                    </label>
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={parking}
-                            onChange={(e) => setparking(e.target.checked)}
-                        />
-                        駐車場有り
-                    </label>
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={midnight}
-                            onChange={(e) => setmidnight(e.target.checked)}
-                        />
-                        23時以降も営業
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={useCurrentLocation}
-                            onChange={(e) => setUseCurrentLocation(e.target.checked)}
-                        />
-                        現在地から検索する
-                    </label>
-
-                    
-                </div>
+                                <div className={styles.filterMenu}>
+                                <label><input type="checkbox" checked={wifi} onChange={(e) => setWifi(e.target.checked)} /> Wi-Fi有り</label>
+                                <label><input type="checkbox" checked={privateRoom} onChange={(e) => setPrivateRoom(e.target.checked)} /> 個室有り</label>
+                                <label><input type="checkbox" checked={lunch} onChange={(e) => setLunch(e.target.checked)} /> ランチ有り</label>
+                                <label><input type="checkbox" checked={free_d} onChange={(e) => setFree_d(e.target.checked)} /> 飲み放題有り</label>
+                                <label><input type="checkbox" checked={free_f} onChange={(e) => setfree_f(e.target.checked)} /> 食べ放題有り</label>
+                                <label><input type="checkbox" checked={parking} onChange={(e) => setparking(e.target.checked)} /> 駐車場有り</label>
+                                <label><input type="checkbox" checked={midnight} onChange={(e) => setmidnight(e.target.checked)} /> 23時以降も営業</label>
+                                <label><input type="checkbox" checked={useCurrentLocation} onChange={(e) => setUseCurrentLocation(e.target.checked)} /> 現在地から検索する</label>
+                            </div>
             )}
             
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             
-            <ul className={styles.searchResults}>
+            <ul className={styles.searchResults} >
+
                 {Array.isArray(currentResults) && currentResults.map((shop, index) => (
-                    <li key={index} className={styles.shopItem}>
-                        <h3>{shop.name}</h3>
+                    <li key={index} className={styles.shopItem} onClick={() => openModal(shop)}>
+                        <h3 className={styles.ShopName}>{shop.name}</h3>
                         <div className={styles.imageAndAddressContainer}>
                             {shop.logo_image && (
                                 <img
@@ -293,7 +259,7 @@ export default function StoreSearch() {
                             <div className={styles.jouho}>
                                 <p className={styles.address}>{shop.address}</p>
                                 <p className={styles.open}>営業時間: {shop.open}</p>
-                                <p>平均予算: {shop.budget?.average && shop.budget.average !== '' ? shop.budget.average : '情報なし'}</p>
+                                <p className={styles.ave}>平均予算: {shop.budget?.average && shop.budget.average !== '' ? shop.budget.average : '情報なし'}</p>
 
                             </div>
                         </div>
@@ -301,20 +267,26 @@ export default function StoreSearch() {
                             <p className={styles.genre}>ジャンル: {shop.genre.name}</p>
                         </div>
                     </li>
-
                 ))}
+                   
+                   {hasSearched && (
+    <p>
+        Powered by <a href="http://webservice.recruit.co.jp/" style={{ color: 'blue', textDecoration: 'underline' }}>ホットペッパーグルメ Webサービス</a>
+    </p>
+)}
 
 {totalPages > 1 && (
-        <div className={styles.pagination}>
-            <button onClick={prevPage} disabled={currentPage === 1}>
-                前のページ
-            </button>
-            <span> {currentPage} / {totalPages}</span>
-            <button onClick={nextPage} disabled={currentPage === totalPages}>
-                次のページ
-            </button>
-        </div>
-    )}
+    <div className={`${styles.pagination} ${isMobile ? styles.paginationMobile : ''}`}>
+        <button className={styles.nbButton}onClick={prevPage} disabled={currentPage === 1}>
+            <TiArrowLeftThick />
+        </button>
+        <span> {currentPage} / {totalPages}</span>
+        <button className={styles.nbButton}onClick={nextPage} disabled={currentPage === totalPages}>
+            < TiArrowRightThick />
+        </button>
+    </div>
+)}
+
 
                 {hasSearched && !isAtTop && (
                 <div className={styles.ScrollTop}>
@@ -322,6 +294,43 @@ export default function StoreSearch() {
                 </div>
                     )}
             </ul>
+            <div>
+            <Modal 
+                isOpen={modal}
+                onRequestClose={closeModal}
+                contentLabel="Shop Details"
+                style={{
+                    content: {        top: '50%',  left: '50%',right: 'auto',bottom: 'auto',marginRight: '-50%',transform: 'translate(-50%, -50%)',width: isMobile ? '90%' : '1300px',  height: isMobile ? '80%' : '900px',},
+                }}
+            >
+                {selectedShop && (
+                    <div className={styles.MODAL}>
+                        <button className={styles.closeB} onClick={closeModal}><CloseIcon boxSize={25}/></button>
+                        <h2>{selectedShop.name}</h2>
+                        <p>{selectedShop.address}</p>
+                        {selectedShop.photo?.pc?.l && (
+                                <img
+                                    src={selectedShop.photo.pc.l}
+                                    alt={`${selectedShop.name} photo`}
+                                    className={styles.shopImage}
+                                />
+                            )}
+                        <p>営業時間: {selectedShop.open}</p>
+                        <p>料金備考: {selectedShop.budget_memo && selectedShop.budget_memo !== '' ? selectedShop.budget_memo : '情報なし'}</p>
+                        <div className={styles.Map}>
+                        <MapView 
+                        lat={selectedShop.lat} 
+                        lng={selectedShop.lng} 
+                        shopName={selectedShop.name} 
+                        shopAddress={selectedShop.address} 
+                        currentLat={currentLat ?? 0}  // デフォルト値を設定
+                        currentLng={currentLng ?? 0}  // デフォルト値を設定
+                        />
+                        </div>
+                    </div>
+                )}
+            </Modal>
+            </div>
             <Footer />
         </div>
     );

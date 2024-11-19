@@ -1,46 +1,72 @@
 'use client';
-
-import React from 'react';
-import { FaSearch, FaHeart, FaUserCircle } from 'react-icons/fa';
-import { FaSackDollar } from 'react-icons/fa6';
+import React, { useEffect, useState } from 'react';
+import { FaHeart, FaUserCircle } from 'react-icons/fa';
+import { MdOutlineHistory } from "react-icons/md";
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import styles from '../styles/Footer.module.css';
+import { usePathname } from 'next/navigation';
+import styles from './Footer.module.css';
+import { onAuthStateChangedListener } from '../hooks/login';
+import { IoHome } from 'react-icons/io5';
+import { useDisclosure } from '@chakra-ui/react';
+import LoginModal from '../ Login/Login';
 
 const Footer: React.FC = () => {
-  const pathname = usePathname(); 
-  // const router = useRouter(); 
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener((user) => {
+      setIsLoggedIn(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const isActive = (path: string) => pathname === path;
 
   return (
     <footer className={styles.footer}>
       <div className={styles.iconContainer}>
-        {/* 検索ページリンク */}
-        <Link href="/" className={`${styles.iconButton} ${isActive('/') || isActive('/Roulette/Roulette_Search') || ('/Store_Search/page') ? styles.active : ''}`}>
-          <FaSearch className={styles.icon} />
-          <span>検索</span>
+        <Link href="/" className={`${styles.iconButton} ${isActive('/') ? styles.active : ''}`}>
+          <IoHome className={styles.icon} />
+          <span>Home</span>
         </Link>
 
-        {/* お気に入りページリンク */}
-        <Link href="/favorites" className={`${styles.iconButton} ${isActive('/favorites') ? styles.active : ''}`}>
+        <Link
+          href="/favorites"
+          onClick={(e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+            }
+          }}
+          className={`${styles.iconButton} ${isActive('/favorites') ? styles.active : ''} ${!isLoggedIn ? styles.disabled : ''}`}
+          aria-disabled={!isLoggedIn}
+        >
           <FaHeart className={styles.icon} />
           <span>お気に入り</span>
         </Link>
 
-        {/* 食費プランページリンク */}
-        <Link href="/money_plan" className={`${styles.iconButton} ${isActive('/money_plan') ? styles.active : ''}`}>
-          <FaSackDollar className={styles.icon} />
-          <span>食費プラン</span>
+        <Link href="/money_plan" className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''}`}>
+          <MdOutlineHistory className={styles.icon} />
+          <span>履歴</span>
         </Link>
 
-        {/* マイページリンク */}
-        <Link href="/mypage" className={`${styles.iconButton} ${isActive('/mypage') ? styles.active : ''}`}>
+        <Link
+          href="/mypage"
+          onClick={(e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              onOpen();  // モーダルを開く
+            }
+          }}
+          className={`${styles.iconButton} ${isLoggedIn && isActive('/mypage') ? styles.active : ''}`}
+        >
           <FaUserCircle className={styles.icon} />
-          <span>マイページ</span>
+          <span>{isLoggedIn ? 'マイページ' : 'ログイン'}</span>
         </Link>
       </div>
+
+      <LoginModal isOpen={isOpen} onClose={onClose} />
     </footer>
   );
 };

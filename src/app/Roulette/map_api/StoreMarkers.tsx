@@ -8,6 +8,15 @@ interface Store {
   lng: number;
   address: string;
   phone: string;
+  open: string;
+  genre: string;
+  url?: string;
+  photo?: {
+    mobile?: {
+      l: string;
+      s: string;
+    };
+  };
 }
 
 const customIcon = L.icon({
