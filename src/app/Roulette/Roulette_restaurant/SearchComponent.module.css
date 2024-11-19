@@ -1,0 +1,254 @@
+/* スライダー全体のコンテナ */
+.sliderContainer {
+  width: 90%; /* デバイス幅に応じて調整 */
+  max-width: 400px; /* 最大幅を制限 */
+  margin: 20px auto;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  position: relative;
+}
+
+/* スライダー */
+.slider {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 各スライド */
+.slide {
+  min-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-right: 1px solid #eee;
+  display: flex;
+}
+
+/* 最後のスライドの右ボーダーを削除 */
+.slide:last-child {
+  border-right: none;
+}
+
+/* 飲食店の名前 */
+.slide h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* ジャンル */
+.slide p {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+/* ボタンスタイル */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 10px;
+}
+
+/* ボタンホバー */
+.button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* 無効化されたボタン */
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* スライダーのナビゲーション用ボタン */
+.sliderContainer button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* 左ボタン */
+.sliderContainer button.left {
+  left: 10px;
+}
+
+/* 右ボタン */
+.sliderContainer button.right {
+  right: 10px;
+}
+
+.container {
+  max-width: 600px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-top: 10%;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  color: #333;
+}
+
+.radioGroup {
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px 0 20px;
+}
+
+.radioGroup label {
+  font-size: 14px;
+}
+
+.selectGroup {
+  margin-bottom: 15px;
+}
+
+.select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.select:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.button {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.errorMessage {
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.store_photo {
+  width: 140px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.images_conatiner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 40%;
+}
+.store_text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .store_container {
+    margin-top: 18%;
+  }
+  .slide {
+    display: flex;
+  }
+  .slide h3 {
+    font-size: 16px;
+  }
+  .slide p {
+    font-size: 12px;
+  }
+  .button {
+    font-size: 14px;
+    width: 200px;
+    padding: 8px 16px;
+  }
+  .container {
+    margin-top: 30%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .search_button {
+    background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20vw;
+      height: 20vw;
+      padding: 0;
+      font-size: 5vw;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      position: fixed;
+      bottom: 14vh;
+      right: 3vw;
+      box-shadow: 2px 3px 0px #1567C3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+  }
+  
+  /* ボタンのホバースタイル */
+  .search_button:hover {
+    background-color: #0056b3;
+    box-shadow: none;
+    transform: translateY(4px);
+  }
+  .store_photo {
+    width: 100px;
+    height: 75px;
+  }
+}
