@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./SearchComponent.module.css";
+import styles from "./style/SearchComponent.module.css";
 
 const prefectures = [
     '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
