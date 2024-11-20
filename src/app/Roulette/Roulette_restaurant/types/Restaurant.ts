@@ -15,4 +15,10 @@ export interface Restaurant {
         };
     };
     open: string;
+    budget?: {
+        code: string;
+        name: string;
+        average: string;
+      };
+    isFavorite: boolean;
 }

@@ -14,7 +14,7 @@ const Home: React.FC = () => {
   }, []);
 
   const handleForm01 = () => {
-    router.push('/Roulette/map_api/Restran_opthon'); 
+    router.push('/Roulette/Roulette_restaurant'); 
   };
 
   const handleForm02 = () => {
