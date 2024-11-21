@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./style/SearchComponent.module.css";
+import styles from "./style/SearchForm.module.css";
 
 const prefectures = [
     '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
@@ -106,7 +106,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
 
     return (
         <div className={styles.container}>
-            <label>検索方法を選択</label>
+            
             <div className={styles.radioGroup}>
                 <label>
                     <input
@@ -115,7 +115,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                         checked={locationChoice === 'current'}
                         onChange={() => setLocationChoice('current')}
                     />
-                    現在地で検索
+                    現在地
                 </label>
                 <label>
                     <input
@@ -124,7 +124,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                         checked={locationChoice === 'prefecture'}
                         onChange={() => setLocationChoice('prefecture')}
                     />
-                    都道府県で検索
+                    都道府県
                 </label>
             </div>
             {locationChoice === 'prefecture' && (
@@ -146,8 +146,8 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
             )}
             <div className={styles.selectGroup}>
                 <label htmlFor="category">カテゴリを選択</label>
-                <select id="category" onChange={(e) => setCategory(e.target.value)} value={category}>
-                    <option value="">カテゴリを選択</option>
+                <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
+                    <option value="">全選択</option>
                     <option value="G001">居酒屋</option>
                     <option value="G002">ダイニングバー・バル</option>
                     <option value="G003">創作料理</option>
@@ -169,7 +169,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
             </div>
             <div className={styles.selectGroup}>
                 <label htmlFor="range">範囲（km）</label>
-                <select id="range" onChange={(e) => setRange(Number(e.target.value))} value={range}>
+                <select id="range" onChange={(e) => setRange(Number(e.target.value))} value={range} className={styles.label_container}>
                     <option value={1}>300 m</option>
                     <option value={2}>500 m</option>
                     <option value={3}>1 km</option>
@@ -179,10 +179,12 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
             </div>
             <div className={styles.selectGroup}>
                 <label htmlFor="count">件数を選択</label>
-                <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count}>
+                <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
                     <option value={10}>10件</option>
                     <option value={20}>20件</option>
                     <option value={30}>30件</option>
+                    <option value={40}>40件</option>
+                    <option value={50}>50件</option>
                 </select>
             </div>
             <button onClick={handleSearch} disabled={isLoading} className={styles.button}>
