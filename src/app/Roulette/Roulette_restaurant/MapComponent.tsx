@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import styles from "./MapComponent.module.css";
+import styles from "./style/MapComponent.module.css";
 import { Restaurant } from "./types/Restaurant";
 
 interface MapComponentProps {

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { onAuthStateChangedListener } from '../hooks/login';
 import { db } from '../hooks/firebase';
 import { doc, getDocs, collection } from 'firebase/firestore';
 import Footer from "../components/Footer";
-import LoadingScreen from '../Roulette/map_api/LoadingScreen';
+import LoadingScreen from '../components/LoadingScreen';
 import { User } from 'firebase/auth';
 import styles from './Favorites.module.css';
 import OperatingHours from './OperatingHours';
@@ -18,24 +18,20 @@ interface FavoriteStore {
   open: string;
   lat: number;
   lng: number;
-  photo?: {
-    mobile?: {
-      l: string;
-      s: string;
-    };
-  };
+  photo: string;
 }
 
 const Favorites: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [favorites, setFavorites] = useState<FavoriteStore[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // エラーメッセージ用
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((user) => {
       setUser(user);
       if (user) {
-        fetchAllFavorites(user.uid); // 全データを取得
+        fetchAllFavorites(user.uid); // ユーザーがログインしていればデータ取得
       } else {
         setFavorites([]);
         setLoading(false);
@@ -46,8 +42,8 @@ const Favorites: React.FC = () => {
 
   const fetchAllFavorites = async (userId: string) => {
     setLoading(true);
+    setError(null); // エラーをリセット
     try {
-      // 「お気に入り」の全データを取得
       const snapshot = await getDocs(collection(doc(db, "users", userId), "favorites"));
       const fetchedFavorites: FavoriteStore[] = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -61,6 +57,7 @@ const Favorites: React.FC = () => {
       }));
       setFavorites(fetchedFavorites);
     } catch (error) {
+      setError('お気に入りの取得に失敗しました。再試行してください。');
       console.error("お気に入りを取得中にエラーが発生しました: ", error);
     } finally {
       setLoading(false);
@@ -68,16 +65,22 @@ const Favorites: React.FC = () => {
   };
 
   if (!user) {
-    return <div>ログインして、お気に入りの飲食店を表示しましょう。</div>;
+    return <div className={styles.message}>ログインして、お気に入りの飲食店を表示しましょう。</div>;
   }
 
   if (loading) {
     return <LoadingScreen />;
   }
 
-  if (favorites.length === 0) {
-    return <div>お気に入りはまだありません。</div>;
+  if (error) {
+    return <div className={styles.message}>{error}</div>;
   }
+
+  if (favorites.length === 0) {
+    return <div className={styles.message}>お気に入りはまだありません。</div>;
+  }
+
+
 
   return (
     <div className={styles.favorites_container}>
@@ -91,10 +94,10 @@ const Favorites: React.FC = () => {
             <li key={store.id} className={styles.favorite_item}>
               <h2>{store.name}</h2>
               {store.photo && (
-                <img 
-                  src={store.photo.mobile?.s} 
-                  alt="店舗写真（モバイル用）" 
-                  className={styles.store_photo} 
+                <img
+                  src={store.photo}
+                  alt="店舗写真（モバイル用）"
+                  className={styles.store_photo}
                 />
               )}
               <p>住所: {store.address}</p>

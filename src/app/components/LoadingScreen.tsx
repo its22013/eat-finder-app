@@ -1,6 +1,6 @@
 // components/LoadingScreen.tsx
 import React from 'react';
-import styles from './LoadingScreen.module.css';
+import styles from '@/app/components/LoadingScreen.module.css'
 
 const LoadingScreen: React.FC = () => {
   return (
