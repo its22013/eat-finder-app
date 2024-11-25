@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
           <span>お気に入り</span>
         </Link>
 
-        <Link href="/money_plan" className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''}`}>
+        <Link href="/history" className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''}`}>
           <MdOutlineHistory className={styles.icon} />
           <span>履歴</span>
         </Link>
