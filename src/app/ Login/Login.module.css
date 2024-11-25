@@ -121,5 +121,24 @@
     align-items: center;
     padding: 20px;
   }
-
+  .modalBody {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* ModalBody と ModalFooter の間隔を開ける */
+  }
+.text {
+  margin-left:25%;
+}
+.form {
+  width: 100%;
+}
+.btnGoogle {
+  width:100%;
+}
+.btn {
+  width:100%;
+}
 }
