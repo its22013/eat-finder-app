@@ -1,0 +1,24 @@
+.mapContainer {
+  height: 500px;
+  width: 100%;
+  z-index: 1; /* Ensure the map stays at the bottom */
+}
+
+@media (max-width: 600px) {
+.mapContainer {
+    height: 300px;
+    width: 100%;
+    z-index: 1; /* Ensure the map stays at the bottom */
+  }
+  
+  .markerIcon {
+    width: 41px;
+    height: 41px;
+  }
+  
+  .markerShadow {
+    width: 41px;
+    height: 41px;
+  }
+
+}

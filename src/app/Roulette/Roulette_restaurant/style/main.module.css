@@ -1,0 +1,55 @@
+.main_container{
+    height: 100vh;
+  }
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  flex-shrink: 0;
+  background-image: url(/images/Roulette_Search.png);
+  color: #2b2b2b;
+  padding: 15px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.header h1 {
+  font-size: 20px;
+}
+
+.main_container {
+  display: flex; /* 横並びに配置 */
+  gap: 20px; /* 要素間のスペース */
+}
+
+.slider_and_map_container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* 小さい画面では縦並びに */
+  width: 100%;
+  position: fixed;
+  top: 13%;
+}
+
+.slider_container,
+.map_container {
+  flex: 1; /* 要素を均等に広げる */
+  min-width: 300px; /* 最小幅を指定 */
+}
+
+.buck_button {
+  font-size: 50px;
+  cursor: pointer;
+  position: fixed;
+  top: 20px;
+  left: 25px;
+  z-index: 1;
+}
+
+.map_container {
+  height: 500px; /* マップの高さを指定 */
+  border: 1px solid #ccc; /* 見やすくするための枠線 */
+}

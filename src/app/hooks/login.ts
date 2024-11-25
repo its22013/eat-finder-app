@@ -1,6 +1,22 @@
 // login.ts
+"use client";
+
+import { useEffect, useState } from "react";
 import { auth, googleProvider } from "./firebase";
 import { signInWithPopup, onAuthStateChanged, User } from "firebase/auth";
+
+export const useAuth = () => {
+    const [user, setUser] = useState<any>(null);
+  
+    useEffect(() => {
+      const unsubscribe = onAuthStateChangedListener((user) => {
+        setUser(user);
+      });
+      return () => unsubscribe();
+    }, []);
+  
+    return { user };
+  };
 
 // Googleログイン処理
 export const signInWithGoogle = async () => {
