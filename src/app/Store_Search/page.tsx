@@ -12,7 +12,8 @@ const MapView = dynamic(() => import('./MapView'), {
     ssr: false, // サーバーサイドレンダリングを無効にする
 });
 import  Modal from 'react-modal';
-import { color } from 'framer-motion';
+import { db, addDoc, collection } from '../hooks/firebase';
+import { getAuth } from 'firebase/auth';
 
 Modal.setAppElement('body');
 export default function StoreSearch() {
@@ -44,9 +45,36 @@ export default function StoreSearch() {
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
     };
- 
+    const saveToHistory = async (shop: any) => { // shopを引数として受け取る
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const userId = user?.uid
+        if (user) {
+            try {
+                // user.uid を使ってデータを保存
+                await addDoc(collection(db, `users/${userId}/history`), {
+                    userId: user.uid,
+                    name: shop.name,  // shopオブジェクトのプロパティにアクセス
+                    address: shop.address,
+                    photo: shop.photo?.pc?.l || '',
+                    open: shop.open,
+                    budget: shop.budget?.average || '情報なし',
+                    genre: shop.genre.name,
+                    lat: shop.lat,
+                    lng: shop.lng,
+                    createdAt: new Date()
+                });
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
+        } else {
+            console.log("User is not authenticated");
+        }
+    };
+    
     const openModal = (shop: any) => {
         setSelectedShop(shop); // 選択したショップの情報を設定
+        saveToHistory(shop); // Firestoreに保存
         setModal(true);
     };
 
