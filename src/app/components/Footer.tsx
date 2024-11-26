@@ -46,7 +46,13 @@ const Footer: React.FC = () => {
           <span>お気に入り</span>
         </Link>
 
-        <Link href="/history" className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''}`}>
+        <Link href="/history"
+        onClick={(e) => {
+          if (!isLoggedIn) {
+            e.preventDefault();
+          }
+        }} className={`${styles.iconButton} ${isActive('/history') ? styles.active : ''} ${!isLoggedIn ? styles.disabled: ''}`} 
+        aria-disabled={!isLoggedIn}>
           <MdOutlineHistory className={styles.icon} />
           <span>履歴</span>
         </Link>

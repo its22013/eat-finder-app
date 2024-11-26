@@ -6,9 +6,10 @@ import { getAuth } from 'firebase/auth';
 import Footer from '../components/Footer';
 import styles from './history.module.css'; // CSSモジュールをインポート
 
+
 export default function HistoryPage() {
     const [history, setHistory] = useState<any[]>([]);
-
+    
     useEffect(() => {
         const fetchHistory = async () => {
             const auth = getAuth();
@@ -34,7 +35,7 @@ export default function HistoryPage() {
     }, []);
 
     return (
-        <div>
+        <div className={styles.main}>
         <div className={styles.historyContainer}>
             <h1>検索履歴</h1>
             {history.length === 0 ? (
