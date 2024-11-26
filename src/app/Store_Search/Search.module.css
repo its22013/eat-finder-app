@@ -55,60 +55,68 @@
   }
   
   .shopItem {
-    border: 1px solid #ddd;
-    padding: 20px;
+    border: 1px solid #ccc; /* ボーダーを薄く */
+    padding: 15px; /* 内側の余白を調整 */
     margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    text-align: left;
-  }
-  
-  .shopItem h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .imageAndAddressContainer {
+    border-radius: 10px; /* カードの角を丸める */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
+    background-color: #f8f8f8; /* 背景色を薄いグレーに */
+    text-align: center; /* テキストを中央揃え */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shopItem:hover {
+    transform: translateY(-5px); /* カードを少し持ち上げる */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* ホバー時の影を濃くする */
+}
+
+.imageAndAddressContainer {
     display: flex;
-    align-items: center;
-    justify-content: flex-start; /* 要素を左揃え */
-    gap: 50px; /* 画像と住所、営業時間の間隔を調整 */
-  }
-  
-  .shopImage,
-  .shopLogo {
-    max-width: 150px; /* ロゴと写真の大きさを調整 */
+    flex-direction: column; /* モバイルと同じく縦並び */
+    align-items: center; /* 中央揃え */
+    gap: 15px; /* 要素間の余白を調整 */
+}
+
+.shopImage,
+.shopLogo {
+    width: 120px; /* 固定幅を設定 */
     height: auto;
-    border-radius: 8px;
-  }
-  
-  .address {
-    flex: 1; /* 必要に応じて可変幅にする */
-    text-align: left;
-  }
-  
-  .open {
-    text-align: left;
-    flex: 1;
-  }
-  
-  .infoContainer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px;
-  }
-  
-  .genre {
-    text-align: right;
-  }
-  .jouho{
-    font-size: 18px;
-    margin-left: 150px;
-  }
-  
-  
+    border-radius: 50%; /* 丸い形に */
+    object-fit: cover; /* 縦横比を維持 */
+}
+
+.jouho {
+    font-size: 16px;
+    color: #333; /* テキストカラーを少し濃く */
+    line-height: 1.5;
+    text-align: center; /* テキストを中央揃え */
+}
+
+.ShopName {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333; /* 店名を濃い色に */
+}
+
+.address, .open, .ave {
+    margin: 5px 0; /* 上下に少し余白を追加 */
+}
+
+.infoContainer {
+    margin-top: 10px; /* 上部に余白を追加 */
+    text-align: center; /* 中央揃え */
+}
+
+.genre {
+    font-size: 14px;
+    color: #666; /* ジャンルの文字色を薄く */
+}
+
+.pagination {
+    margin-top: 20px; /* 上部に余白を追加 */
+    text-align: center;
+}
   
   .searchButton:hover {
     background-color: #90ee90;
@@ -227,9 +235,7 @@
     .shopLogo{
         display: none;
     }
-    .ShopName {
-      text-align: center; 
-    }
+  
     .ave{
       text-align: center;
   
@@ -254,9 +260,7 @@
       margin: 10px auto;
       font-size: 14px; /* テキストサイズを調整 */
     }
-  .jouho {
-    margin: 0 auto;
-  }
+ 
     .filterButton,
     .searchButton {
       width: 100%;
@@ -276,10 +280,18 @@
       margin-bottom: 15px;
     }
   
-    .imageAndAddressContainer {
-      flex-direction: column; /* モバイルでは縦に並べる */
-      gap: 10px;
-    }
+    .shopItem {
+      padding: 10px; /* モバイル用に内側の余白を縮小 */
+  }
+  .imageAndAddressContainer {
+      gap: 10px; /* 間隔を縮小 */
+  }
+  .ShopName {
+      font-size: 18px; /* 店名のサイズを小さく */
+  }
+  .jouho {
+      font-size: 14px; /* 情報部分の文字サイズを小さく */
+  }
   
     .shopImage,
     .shopLogo {

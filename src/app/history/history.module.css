@@ -3,8 +3,11 @@
 /* コンテナ */
 .historyContainer {
     margin: 20px auto;
-    max-width: 800px;
+    max-width: 60%;
     padding: 16px;
+}
+.main{
+    margin-bottom: 5%;
 }
 
 /* 履歴カード */
@@ -100,5 +103,8 @@
     .image {
         width: 70px;  /* さらに小さく調整 */
         height: 70px;
+    }
+    .main {
+        margin-bottom:15%;
     }
 }

@@ -270,13 +270,7 @@ export default function StoreSearch() {
                     <li key={index} className={styles.shopItem} onClick={() => openModal(shop)}>
                         <h3 className={styles.ShopName}>{shop.name}</h3>
                         <div className={styles.imageAndAddressContainer}>
-                            {shop.logo_image && (
-                                <img
-                                    src={shop.logo_image}
-                                    alt={`${shop.name} logo`}
-                                    className={`${styles.shopImage} ${styles.shopLogo}`}
-                                />
-                            )}
+                          
                             {shop.photo?.pc?.l && (
                                 <img
                                     src={shop.photo.pc.l}
