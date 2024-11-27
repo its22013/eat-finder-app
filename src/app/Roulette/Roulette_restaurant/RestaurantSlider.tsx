@@ -9,6 +9,7 @@ import { db } from "../../hooks/firebase";
 import { useAuth } from "../../hooks/login"; // useAuthフックをインポート
 import { IoMdHeart } from "react-icons/io";
 
+
 interface Props {
   restaurants: Restaurant[];
   setIsLoading: (isLoading: boolean) => void;
@@ -123,6 +124,8 @@ const RestaurantSlider = ({
         open: restaurant.open.split("（")[0].trim(),
         budget: restaurant.budget?.name || "不明",
         address: restaurant.address,
+        lat: restaurant.lat,
+        lng: restaurant.lng,
       };
       await setDoc(doc(db, "users", user.uid, "favorites", restaurant.id), restaurantData); // お気に入り追加
       updatedFavorites.push(restaurantData);

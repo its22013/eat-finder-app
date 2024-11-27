@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getDocs, collection, doc } from "firebase/firestore";
+import { db } from "../../hooks/firebase";  
 import styles from "./style/SearchForm.module.css";
 
 const prefectures = [
@@ -19,16 +22,40 @@ interface SearchFormProps {
     isLoading: boolean;
     setSliderActive: (active: boolean) => void;
     setMapActive: (active: boolean) => void;
+    userId: string;  // userIdを受け取るプロパティを追加
 }
 
-const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, setMapActive }: SearchFormProps) => {
-    const [lat, setLat] = useState<number>(26.1564543); // 初期値として沖縄の座標を設定
-    const [lng, setLng] = useState<number>(127.6600793); // 初期値として沖縄の座標を設定
+const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, setMapActive, userId }: SearchFormProps) => {
+    const [lat, setLat] = useState<number>(26.1564543);
+    const [lng, setLng] = useState<number>(127.6600793);
     const [category, setCategory] = useState('');
     const [range, setRange] = useState(5);
     const [count, setCount] = useState(10);
     const [prefecture, setPrefecture] = useState('');
-    const [locationChoice, setLocationChoice] = useState<'current' | 'prefecture'>('current');
+    const [locationChoice, setLocationChoice] = useState<'current' | 'prefecture' | 'roulette'>('current');
+    const [favoriteCount, setFavoriteCount] = useState<number>(0);  // お気に入り件数の状態を追加
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchFavoriteCount = async (userId: string) => {
+            if (locationChoice === 'roulette') {
+                try {
+                    const favoritesRef = collection(doc(db, "users", userId), "favorites");
+                    const snapshot = await getDocs(favoritesRef);
+                    setFavoriteCount(snapshot.size);
+                } catch (error) {
+                    console.error("お気に入りの取得に失敗しました:", error);
+                    setFavoriteCount(0);
+                }
+            }
+        };
+    
+        if (userId) {
+            fetchFavoriteCount(userId);
+        }
+    }, [locationChoice, userId]); 
+    
 
     const getCurrentLocation = () => {
         return new Promise<{ latitude: number; longitude: number }>((resolve, reject) => {
@@ -60,11 +87,15 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
             let currentLng = lng;
 
             if (locationChoice === 'current') {
-                const currentLocation = await getCurrentLocation(); // 検索時に現在地を取得
+                const currentLocation = await getCurrentLocation();
                 currentLat = currentLocation.latitude;
                 currentLng = currentLocation.longitude;
             }
 
+            if (locationChoice === 'roulette') {
+                router.push('/Roulette/FavoriteRoulette'); // お気に入りルーレット画面に遷移
+                return;
+            }
 
             let url = '/api/Roulette_api?format=json';
 
@@ -95,7 +126,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
 
             const data = await response.json();
             setRestaurants(data.results?.shop || []);
-            setMapActive(true); 
+            setMapActive(true);
         } catch (error) {
             console.error("Search error:", error);
             alert("飲食店の検索に失敗しました。");
@@ -106,7 +137,6 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
 
     return (
         <div className={styles.container}>
-            
             <div className={styles.radioGroup}>
                 <label>
                     <input
@@ -126,6 +156,15 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                     />
                     都道府県
                 </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="roulette"
+                        checked={locationChoice === 'roulette'}
+                        onChange={() => setLocationChoice('roulette')}
+                    />
+                    お気に入り
+                </label>
             </div>
             {locationChoice === 'prefecture' && (
                 <div className={styles.selectGroup}>
@@ -134,6 +173,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                         id="prefecture"
                         onChange={(e) => setPrefecture(e.target.value)}
                         value={prefecture}
+                        className={styles.label_container}
                     >
                         <option value="">都道府県を選択</option>
                         {prefectures.map((pref) => (
@@ -144,51 +184,57 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                     </select>
                 </div>
             )}
-            <div className={styles.selectGroup}>
-                <label htmlFor="category">カテゴリを選択</label>
-                <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
-                    <option value="">全選択</option>
-                    <option value="G001">居酒屋</option>
-                    <option value="G002">ダイニングバー・バル</option>
-                    <option value="G003">創作料理</option>
-                    <option value="G004">和食</option>
-                    <option value="G005">洋食</option>
-                    <option value="G006">イタリアン・フレンチ</option>
-                    <option value="G007">中華</option>
-                    <option value="G008">焼肉・ホルモン</option>
-                    <option value="G009">アジア・エスニック料理</option>
-                    <option value="G010">各国料理</option>
-                    <option value="G011">カラオケ・パーティ</option>
-                    <option value="G012">バー・カクテル</option>
-                    <option value="G013">ラーメン</option>
-                    <option value="G014">カフェ・スイーツ</option>
-                    <option value="G015">その他グルメ</option>
-                    <option value="G016">お好み焼き・もんじゃ</option>
-                    <option value="G017">韓国料理</option>
-                </select>
-            </div>
-            <div className={styles.selectGroup}>
-                <label htmlFor="range">範囲（km）</label>
-                <select id="range" onChange={(e) => setRange(Number(e.target.value))} value={range} className={styles.label_container}>
-                    <option value={1}>300 m</option>
-                    <option value={2}>500 m</option>
-                    <option value={3}>1 km</option>
-                    <option value={4}>2 km</option>
-                    <option value={5}>3 km</option>
-                </select>
-            </div>
-            <div className={styles.selectGroup}>
-                <label htmlFor="count">件数を選択</label>
-                <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
-                    <option value={10}>10件</option>
-                    <option value={20}>20件</option>
-                    <option value={30}>30件</option>
-                    <option value={40}>40件</option>
-                    <option value={50}>50件</option>
-                </select>
-            </div>
-            <button onClick={handleSearch} disabled={isLoading} className={styles.button}>
-                検索
+            {locationChoice !== 'roulette' && (
+                <>
+                    <div className={styles.selectGroup}>
+                        <label htmlFor="category">カテゴリを選択</label>
+                        <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
+                            <option value="">全選択</option>
+                            <option value="G001">居酒屋</option>
+                            <option value="G002">ダイニングバー・バル</option>
+                            <option value="G003">創作料理</option>
+                            <option value="G004">和食</option>
+                            <option value="G005">洋食</option>
+                            <option value="G006">イタリアン・フレンチ</option>
+                            <option value="G007">中華</option>
+                            <option value="G008">焼肉・ホルモン</option>
+                            <option value="G009">アジア・エスニック料理</option>
+                            <option value="G010">各国料理</option>
+                            <option value="G011">カラオケ・パーティ</option>
+                            <option value="G012">バー・カクテル</option>
+                            <option value="G013">ラーメン</option>
+                            <option value="G014">カフェ・スイーツ</option>
+                        </select>
+                    </div>
+                    <div className={styles.selectGroup}>
+                        <label htmlFor="range">範囲</label>
+                        <select id="range" onChange={(e) => setRange(Number(e.target.value))} value={range} className={styles.label_container}>
+                            <option value={1}>300 m</option>
+                            <option value={2}>500 m</option>
+                            <option value={3}>1 km</option>
+                            <option value={4}>2 km</option>
+                            <option value={5}>3 km</option>
+                        </select>
+                    </div>
+                    <div className={styles.selectGroup}>
+                        <label htmlFor="count">表示件数</label>
+                        <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
+                            <option value={10}>10件</option>
+                            <option value={20}>20件</option>
+                            <option value={30}>30件</option>
+                            <option value={40}>40件</option>
+                            <option value={50}>50件</option>
+                        </select>
+                    </div>
+                </>
+            )}
+            {locationChoice === 'roulette' && (
+                <h3 className={styles.favoriteCount}>
+                    お気に入りの飲食店: {favoriteCount}件
+                </h3>
+            )}
+            <button onClick={handleSearch} disabled={isLoading} className={styles.search_button}>
+                {isLoading ? "検索中..." : "検索"}
             </button>
         </div>
     );
