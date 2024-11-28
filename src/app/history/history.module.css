@@ -4,7 +4,7 @@
     padding: 16px;
 }
 .main{
-    margin-bottom: 5%;
+    margin-bottom: 10%;
 }
 
 
@@ -49,6 +49,13 @@
     margin: 4px 0;
 }
 
+.h1style {
+    margin: 0; /* 余白を削除 */
+    padding: 10px; /* 必要に応じて内側余白を設定 */
+    text-align: center; /* 中央揃えにしたい場合 */
+    background-color: gold;
+    height:70px;
+}
 
 @media (max-width: 768px) {
     .historyContainer {
@@ -101,6 +108,14 @@
         height: 70px;
     }
     .main {
-        margin-bottom:15%;
+        margin-bottom:20%;
+    }
+    .h1style {
+        margin: 0; /* 余白を削除 */
+        padding: 10px; /* 必要に応じて内側余白を設定 */
+        text-align: center; /* 中央揃えにしたい場合 */
+        background-color: gold;
+        height:60px;
+        font-size: 30px;
     }
 }
