@@ -1,6 +1,7 @@
+// RouletteRestaurantPage.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Restaurant } from "./types/Restaurant";
 import SearchForm from "./SearchForm";
 import RestaurantSlider from "./RestaurantSlider";
@@ -9,6 +10,7 @@ import dynamic from "next/dynamic";
 import styles from "./style/main.module.css";
 import { SlArrowLeftCircle } from "react-icons/sl";
 import Header from "./header";
+import { useAuth } from "../../hooks/login";
 
 const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false });
 
@@ -18,6 +20,9 @@ const RouletteRestaurantPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sliderActive, setSliderActive] = useState(false);
   const [mapActive, setMapActive] = useState(false);
+
+  // useAuthフックを使って認証状態を取得
+  const { user } = useAuth();  // user情報を取得
 
   const goBackToOptions = () => {
     setSliderActive(false);
@@ -31,7 +36,6 @@ const RouletteRestaurantPage = () => {
       {/* Header */}
       <Header />
 
-      {/* Search Form */}
       {!sliderActive && !mapActive ? (
         <SearchForm
           setRestaurants={setRestaurants}
@@ -39,17 +43,18 @@ const RouletteRestaurantPage = () => {
           isLoading={isLoading}
           setSliderActive={setSliderActive}
           setMapActive={setMapActive}
+          userId={user?.uid || ""} 
         />
       ) : (
         <div className={styles.main_container}>
-          {/* Back Button */}
+          
           <div onClick={goBackToOptions} className={styles.buck_button}>
             <SlArrowLeftCircle />
           </div>
 
-          {/* Slider and Map Container */}
+          
           <div className={styles.slider_and_map_container}>
-            {/* Restaurant Slider */}
+            
             {sliderActive && (
               <div className={styles.slider_container}>
                 <RestaurantSlider
@@ -64,7 +69,7 @@ const RouletteRestaurantPage = () => {
               </div>
             )}
 
-            {/* Map Component */}
+            
             {mapActive && restaurants.length > 0 && (
               <div className={styles.map_container}>
                 <MapComponent
@@ -80,7 +85,6 @@ const RouletteRestaurantPage = () => {
         </div>
       )}
 
-      {/* Footer */}
       <Footer />
     </div>
   );
