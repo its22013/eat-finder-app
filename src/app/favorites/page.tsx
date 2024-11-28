@@ -3,12 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import { onAuthStateChangedListener } from '../hooks/login';
 import { db } from '../hooks/firebase';
-import { doc, getDocs, collection } from 'firebase/firestore';
+import { doc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import Footer from "../components/Footer";
 import LoadingScreen from '../components/LoadingScreen';
 import { User } from 'firebase/auth';
 import styles from './Favorites.module.css';
 import OperatingHours from './OperatingHours';
+import { FaDeleteLeft } from "react-icons/fa6";
+import { FaMapMarkedAlt } from 'react-icons/fa';
+import { RiMoneyCnyCircleFill } from 'react-icons/ri';
 
 interface FavoriteStore {
   id: string;
@@ -19,6 +22,8 @@ interface FavoriteStore {
   lat: number;
   lng: number;
   photo: string;
+  genre: string;
+  budget: string;
 }
 
 const Favorites: React.FC = () => {
@@ -54,6 +59,8 @@ const Favorites: React.FC = () => {
         lat: doc.data().lat,
         lng: doc.data().lng,
         photo: doc.data().photo,
+        genre: doc.data().genre,
+        budget: doc.data().budget,
       }));
       setFavorites(fetchedFavorites);
     } catch (error) {
@@ -61,6 +68,20 @@ const Favorites: React.FC = () => {
       console.error("お気に入りを取得中にエラーが発生しました: ", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 削除処理
+  const deleteFavorite = async (storeId: string) => {
+    if (!window.confirm("本当にこの店舗をお気に入りから削除しますか？")) return;
+
+    try {
+      await deleteDoc(doc(db, "users", user?.uid || "", "favorites", storeId));
+      setFavorites(favorites.filter((store) => store.id !== storeId)); // ローカルで状態を更新
+      alert("店舗が削除されました。");
+    } catch (error) {
+      setError('削除中にエラーが発生しました。再試行してください。');
+      console.error("削除中にエラーが発生しました: ", error);
     }
   };
 
@@ -80,8 +101,6 @@ const Favorites: React.FC = () => {
     return <div className={styles.message}>お気に入りはまだありません。</div>;
   }
 
-
-
   return (
     <div className={styles.favorites_container}>
       <div className={styles.title_container}>
@@ -90,21 +109,52 @@ const Favorites: React.FC = () => {
 
       <div className={styles.favorites_list_container}>
         <ul className={styles.favorites_list}>
-          {favorites.map((store) => (
-            <li key={store.id} className={styles.favorite_item}>
-              <h2>{store.name}</h2>
-              {store.photo && (
-                <img
-                  src={store.photo}
-                  alt="店舗写真（モバイル用）"
-                  className={styles.store_photo}
-                />
-              )}
-              <p>住所: {store.address}</p>
-              <p>営業時間:</p>
-              <OperatingHours hours={store.open} />
-            </li>
-          ))}
+          {favorites.map((store) => {
+            const googleMapsUrl = `https://www.google.com/maps?q=${store.name} ${store.lat},${store.lng}`;
+            return (
+              <li key={store.id} className={styles.favorite_item}>
+                <div className={styles.text_container}>
+                {store.photo && (
+                  <img
+                    src={store.photo}
+                    alt="店舗写真（モバイル用）"
+                    className={styles.store_photo}
+                  />
+                )}    
+                <div className={styles.sub_container}>
+                <div className={styles.genre_text}>{store.genre}</div>
+                <h3>
+                  {store.name.length > 15
+                    ? `${store.name.substring(0, 15)} . . .`
+                    : store.name}
+                </h3>
+                {/* 値段 */}
+                <div className={styles.budget_text}>
+                  <RiMoneyCnyCircleFill />
+                <h3>{store.budget}</h3>
+                </div>
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.address_link}
+                >
+                  <FaMapMarkedAlt />
+                </a>      
+                </div>
+                </div>  
+                <OperatingHours hours={store.open} />
+
+                {/* 削除ボタン */}
+                <div
+                  className={styles.delete_button}
+                  onClick={() => deleteFavorite(store.id)}
+                >
+                  <FaDeleteLeft />
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
