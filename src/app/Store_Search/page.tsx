@@ -14,6 +14,10 @@ const MapView = dynamic(() => import('./MapView'), {
 import  Modal from 'react-modal';
 import { db, addDoc, collection } from '../hooks/firebase';
 import { getAuth } from 'firebase/auth';
+import { IoMdHeart } from 'react-icons/io';
+import { Restaurant } from '../Roulette/Roulette_restaurant/types/Restaurant';
+import { useAuth } from '../hooks/login';
+import { deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 
 Modal.setAppElement('body');
 export default function StoreSearch() {
@@ -198,7 +202,64 @@ export default function StoreSearch() {
             scrolltop(); // ページを変更するときにトップにスクロール
         }
     };
- 
+
+    const [favorites, setFavorites] = useState<any[]>([]);
+  const { user } = useAuth();
+
+  // Firebaseからお気に入りを取得
+  useEffect(() => {
+    if (user) {
+      const fetchFavorites = async () => {
+        const docRef = collection(db, 'users', user.uid, 'favorites');
+        const querySnapshot = await getDocs(docRef);
+        const fetchedFavorites: any[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedFavorites.push(doc.data());
+        });
+        setFavorites(fetchedFavorites);
+      };
+      fetchFavorites();
+    }
+  }, [user]);
+
+  // お気に入りを切り替える関数
+  const toggleFavorite = async (restaurant: Restaurant) => {
+    if (!user) {
+      alert('ログインしてください');
+      return;
+    }
+
+    const docRef = collection(db, 'users', user.uid, 'favorites');
+    let updatedFavorites = [...favorites];
+    const isAlreadyFavorite = favorites.some((fav) => fav.id === restaurant.id);
+
+    if (isAlreadyFavorite) {
+      // お気に入りから削除
+      updatedFavorites = updatedFavorites.filter((fav) => fav.id !== restaurant.id);
+      const docToDelete = doc(db, 'users', user.uid, 'favorites', restaurant.id);
+      await deleteDoc(docToDelete);
+      alert('お気に入りから削除しました！');
+    } else {
+      // お気に入りに追加
+      const restaurantData = {
+        id: restaurant.id,
+        name: restaurant.name,
+        genre: restaurant.genre.name,
+        photo: restaurant.photo?.mobile?.s || '',
+        open: restaurant.open.split('（')[0].trim(),
+        budget: restaurant.budget?.name || '不明',
+        address: restaurant.address,
+        lat: restaurant.lat,
+        lng: restaurant.lng,
+      };
+      await setDoc(doc(db, 'users', user.uid, 'favorites', restaurant.id), restaurantData);
+      updatedFavorites.push(restaurantData);
+      alert('お気に入りに追加しました！');
+    }
+
+    setFavorites(updatedFavorites);
+  };
+
     return (
         <div className={styles.text}>
             <h1>キーワード検索</h1>
@@ -317,41 +378,67 @@ export default function StoreSearch() {
                     )}
             </ul>
             <div>
-            <Modal 
+            <Modal
                 isOpen={modal}
                 onRequestClose={closeModal}
                 contentLabel="Shop Details"
                 style={{
-                    content: {        top: '50%',  left: '50%',right: 'auto',bottom: 'auto',marginRight: '-50%',transform: 'translate(-50%, -50%)',width: isMobile ? '90%' : '1300px',  height: isMobile ? '80%' : '900px',},
+                    content: {
+                    top: '50%',
+                    left: '50%',
+                    right: 'auto',
+                    bottom: 'auto',
+                    marginRight: '-50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: isMobile ? '90%' : '1300px',
+                    height: isMobile ? '80%' : '900px',
+                    
+                    },
                 }}
-            >
+                >
                 {selectedShop && (
                     <div className={styles.MODAL}>
-                        <button className={styles.closeB} onClick={closeModal}><CloseIcon boxSize={25}/></button>
-                        <h2>{selectedShop.name}</h2>
-                        <p>{selectedShop.address}</p>
-                        {selectedShop.photo?.pc?.l && (
-                                <img
-                                    src={selectedShop.photo.pc.l}
-                                    alt={`${selectedShop.name} photo`}
-                                    className={styles.shopImage}
-                                />
-                            )}
-                        <p>営業時間: {selectedShop.open}</p>
-                        <p>料金備考: {selectedShop.budget_memo && selectedShop.budget_memo !== '' ? selectedShop.budget_memo : '情報なし'}</p>
-                        <div className={styles.Map}>
-                        <MapView 
-                        lat={selectedShop.lat} 
-                        lng={selectedShop.lng} 
-                        shopName={selectedShop.name} 
-                        shopAddress={selectedShop.address} 
-                        currentLat={currentLat ?? 0}  // デフォルト値を設定
-                        currentLng={currentLng ?? 0}  // デフォルト値を設定
+                    <div
+                        onClick={() => toggleFavorite(selectedShop)} // お気に入りを切り替える
+                        className={`${styles.heart_icon} ${
+                            favorites.some((fav) => fav.id === selectedShop.id) ? styles.favorited : ''
+                        }`}
+                    >
+                        <IoMdHeart />
+                    </div>
+                    <button className={styles.closeB} onClick={closeModal}>
+                        <CloseIcon boxSize={25} />
+                    </button>
+                    <h2>{selectedShop.name}</h2>
+                    <p>{selectedShop.address}</p>
+                    {selectedShop.photo?.pc?.l && (
+                        <img
+                        src={selectedShop.photo.pc.l}
+                        alt={`${selectedShop.name} photo`}
+                        className={styles.shopImage}
                         />
-                        </div>
+                    )}
+                    <p>営業時間: {selectedShop.open}</p>
+                    <p>
+                        料金備考:{' '}
+                        {selectedShop.budget_memo && selectedShop.budget_memo !== ''
+                        ? selectedShop.budget_memo
+                        : '情報なし'}
+                    </p>
+
+                    <div className={styles.Map}>
+                        <MapView
+                        lat={selectedShop.lat}
+                        lng={selectedShop.lng}
+                        shopName={selectedShop.name}
+                        shopAddress={selectedShop.address}
+                        currentLat={currentLat ?? 0} // デフォルト値を設定
+                        currentLng={currentLng ?? 0} // デフォルト値を設定
+                        />
+                    </div>
                     </div>
                 )}
-            </Modal>
+                </Modal>
             </div>
             <Footer />
         </div>

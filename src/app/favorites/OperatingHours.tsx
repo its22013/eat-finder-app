@@ -56,6 +56,8 @@ const OperatingHours: React.FC<OperatingHoursProps> = ({ hours }) => {
   });
 
   return (
+    <div>
+    <p>営業時間:</p>
     <div className={styles.operatingHours}>
       <table className={styles.table}>
         <thead>
@@ -83,6 +85,7 @@ const OperatingHours: React.FC<OperatingHoursProps> = ({ hours }) => {
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
   );
 };
