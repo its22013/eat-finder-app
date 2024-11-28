@@ -17,7 +17,7 @@ import { getAuth } from 'firebase/auth';
 import { IoMdHeart } from 'react-icons/io';
 import { Restaurant } from '../Roulette/Roulette_restaurant/types/Restaurant';
 import { useAuth } from '../hooks/login';
-import { deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDocs, setDoc, query, orderBy, where, getFirestore } from 'firebase/firestore';
 
 Modal.setAppElement('body');
 export default function StoreSearch() {
@@ -49,16 +49,39 @@ export default function StoreSearch() {
     const toggleFilterMenu = () => {
         setIsFilterOpen(!isFilterOpen);
     };
-    const saveToHistory = async (shop: any) => { // shopを引数として受け取る
+    const db = getFirestore();
+    const saveToHistory = async (shop: any) => {
         const auth = getAuth();
         const user = auth.currentUser;
-        const userId = user?.uid
+        const userId = user?.uid;
+    
         if (user) {
             try {
-                // user.uid を使ってデータを保存
-                await addDoc(collection(db, `users/${userId}/history`), {
+                const historyCollection = collection(db, `users/${userId}/history`);
+    
+                // 同じ店が既に保存されているか確認
+                const existingQuery = query(historyCollection, where("name", "==", shop.name));
+                const existingSnapshot = await getDocs(existingQuery);
+    
+                if (!existingSnapshot.empty) {
+                    console.log("This shop is already saved in history.");
+                    return; // 既に存在する場合は保存せずに終了
+                }
+    
+                // 履歴の件数を取得
+                const historyQuery = query(historyCollection, orderBy("createdAt", "asc"));
+                const historySnapshot = await getDocs(historyQuery);
+    
+                if (historySnapshot.size >= 20) {
+                    // 古い順にソートされているので、最初のドキュメントを削除
+                    const oldestDoc = historySnapshot.docs[0];
+                    await deleteDoc(oldestDoc.ref);
+                }
+    
+                // 新しい履歴を追加
+                await addDoc(historyCollection, {
                     userId: user.uid,
-                    name: shop.name,  // shopオブジェクトのプロパティにアクセス
+                    name: shop.name,
                     address: shop.address,
                     photo: shop.photo?.pc?.l || '',
                     open: shop.open,
@@ -68,13 +91,16 @@ export default function StoreSearch() {
                     lng: shop.lng,
                     createdAt: new Date()
                 });
+    
+                console.log("Shop information saved successfully.");
             } catch (error) {
-                console.error("Error adding document: ", error);
+                console.error("Error saving history: ", error);
             }
         } else {
             console.log("User is not authenticated");
         }
     };
+    
     
     const openModal = (shop: any) => {
         setSelectedShop(shop); // 選択したショップの情報を設定

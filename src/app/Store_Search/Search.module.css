@@ -52,6 +52,9 @@
   .searchResults {
     list-style-type: none;
     padding: 0;
+    max-width: 80%;
+    margin: 0 auto;
+    margin-top: 2%;
   }
   
   .shopItem {
@@ -331,7 +334,7 @@
     }
   
     .modal {
-      width: 95%; /* モーダルの幅を調整 */
+      width: 85%; /* モーダルの幅を調整 */
       height: auto; /* 高さはコンテンツに応じて自動 */
     }
   

@@ -1,16 +1,13 @@
-/* history.module.css */
-
-/* コンテナ */
 .historyContainer {
     margin: 20px auto;
     max-width: 60%;
     padding: 16px;
 }
 .main{
-    margin-bottom: 5%;
+    margin-bottom: 10%;
 }
 
-/* 履歴カード */
+
 .card {
     display: flex;
     flex-direction: row;
@@ -24,7 +21,7 @@
     margin-bottom: 16px;
 }
 
-/* 画像 */
+
 .image {
     width: 100px;
     height: 100px;
@@ -32,44 +29,50 @@
     border-radius: 8px;
 }
 
-/* 詳細部分 */
+
 .details {
     display: flex;
     flex-direction: column;
 }
 
-/* タイトル */
+
 .title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 8px;
 }
 
-/* 情報部分 */
+
 .info {
     font-size: 14px;
     color: #555;
     margin: 4px 0;
 }
 
-/* レスポンシブデザイン（スマホ向け） */
+.h1style {
+    margin: 0; /* 余白を削除 */
+    padding: 10px; /* 必要に応じて内側余白を設定 */
+    text-align: center; /* 中央揃えにしたい場合 */
+    background-color: gold;
+    height:70px;
+}
+
 @media (max-width: 768px) {
     .historyContainer {
         padding: 10px;
         max-width: 100%;
     }
 
-    /* カードのレイアウトを縦並びから横並びに変更 */
     .card {
-        flex-direction: row; /* ここをrowに設定して横並びに */
+        flex-direction: row;
         align-items: center;
-        gap: 12px;  /* 画像とタイトルの間隔を調整 */
+        gap: 12px;  
     }
 
     .image {
-        width: 80px;  /* 小さく調整 */
+        width: 80px; 
         height: 80px;
-        margin-right: 12px;  /* 画像とタイトルの間隔を空ける */
+        margin-right: 12px;
     }
 
     .details {
@@ -81,30 +84,38 @@
     }
 
     .info {
-        font-size: 12px;  /* 小さく調整 */
+        font-size: 12px; 
     }
 }
 
-/* 更に小さいスマホ用のスタイル（例: 480px以下） */
+
 @media (max-width: 480px) {
     .card {
         padding: 12px;
-        gap: 8px;  /* 小さなスクリーン向けに間隔を狭める */
+        gap: 8px;  
     }
 
     .title {
-        font-size: 14px; /* タイトルのサイズを小さく */
+        font-size: 14px; 
     }
 
     .info {
-        font-size: 10px; /* 情報のフォントサイズを小さく */
+        font-size: 10px;
     }
 
     .image {
-        width: 70px;  /* さらに小さく調整 */
+        width: 70px;  
         height: 70px;
     }
     .main {
-        margin-bottom:15%;
+        margin-bottom:20%;
+    }
+    .h1style {
+        margin: 0; /* 余白を削除 */
+        padding: 10px; /* 必要に応じて内側余白を設定 */
+        text-align: center; /* 中央揃えにしたい場合 */
+        background-color: gold;
+        height:60px;
+        font-size: 30px;
     }
 }

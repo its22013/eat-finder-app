@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import styles from './history.module.css'; // CSSモジュールをインポート
 
 
+
 export default function HistoryPage() {
     const [history, setHistory] = useState<any[]>([]);
     
@@ -36,8 +37,9 @@ export default function HistoryPage() {
 
     return (
         <div className={styles.main}>
+            <h1 className={styles.h1style}>検索履歴</h1>
         <div className={styles.historyContainer}>
-            <h1>検索履歴</h1>
+            
             {history.length === 0 ? (
                 <p>履歴はありません</p>
             ) : (
