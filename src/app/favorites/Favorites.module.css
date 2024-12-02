@@ -128,11 +128,12 @@
     display: flex;
   }
   .delete_button {
-    font-size: 40px;
+    font-size: 34px;
     position: absolute; /* 親要素内で絶対位置 */
     top: 10px; /* 上からの距離 */
     right: 10px; /* 右からの距離 */
     cursor: pointer;
+    color: #4c4c4c;
   }
   .address_link {
     font-size: 40px;
@@ -167,6 +168,50 @@
     background-color: #fff2da;
     height: 25px;
   }
+  .message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    color: #555;
+  }
+  
+  .message_icon {
+    font-size: 60px;
+    color: #ff6347;
+    margin-bottom: 20px;
+  }
+  
+  .message_text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .suggestion_text {
+    font-size: 16px;
+    color: #777;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  
+  .action_button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .action_button:hover {
+    background-color: #005bb5;
+  }  
   
   @media (max-width: 600px) {
     .title_text {
@@ -174,7 +219,7 @@
     }
   
     .favorites_list_container {
-      margin-top: 20%;
+      margin-top: 10%;
     }
     .store_photo {
       width: 30%;

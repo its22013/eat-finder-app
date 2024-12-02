@@ -11,6 +11,7 @@ import dynamic from "next/dynamic"; // 動的インポート
 import Header from "./header";
 import { SlArrowLeftCircle } from "react-icons/sl";
 import { useRouter } from "next/navigation";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
 // MapComponent をクライアントサイドでのみレンダリング
 const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false });
@@ -35,28 +36,41 @@ const FavoriteRestaurantRoulette = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
       const fetchFavorites = async () => {
         try {
+          setLoading(true); // ローディング開始
           const docRef = collection(db, "users", user.uid, "favorites");
           const querySnapshot = await getDocs(docRef);
-
+  
           const fetchedFavorites: Restaurant[] = [];
           querySnapshot.forEach((doc) => {
             fetchedFavorites.push(doc.data() as Restaurant);
           });
-
+  
           setFavorites(fetchedFavorites);
+  
+          // データ取得後に 3 秒待ってからローディングを終了
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
         } catch (error) {
           console.error("お気に入りの取得中にエラーが発生しました:", error);
+          setLoading(false); // エラー時は即時終了
         }
       };
-
+  
       fetchFavorites();
+    } else {
+      // ユーザーがいない場合も 3 秒待ってローディング終了
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
     }
-  }, [user]);
+  }, [user]);  
 
   const startSliding = () => {
     if (favorites.length === 0) {
@@ -94,85 +108,92 @@ const FavoriteRestaurantRoulette = () => {
     console.log(`Restaurant clicked: ${id}`);
   };
 
+  
   return (
     <div>
       <Header />
-      <div onClick={goBack} className={styles.buck_button}>
-        <SlArrowLeftCircle />
-      </div>
-      <div className={styles.slider_and_map_container}>
-        <div className={styles.store_container}>
-          <div className={styles.sliderContainer}>
-            <div
-              className={styles.slider}
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-                transition: isSliding ? "transform 0.1s ease-in-out" : "none",
-              }}
+      {loading ? ( // ローディング中は LoadingScreen コンポーネントを表示
+        <LoadingScreen />
+      ) : (
+        <>
+          <div onClick={goBack} className={styles.buck_button}>
+            <SlArrowLeftCircle />
+          </div>
+          <div className={styles.slider_and_map_container}>
+            <div className={styles.store_container}>
+              <div className={styles.sliderContainer}>
+                <div
+                  className={styles.slider}
+                  style={{
+                    transform: `translateX(-${currentIndex * 100}%)`,
+                    transition: isSliding ? "transform 0.1s ease-in-out" : "none",
+                  }}
+                >
+                  {favorites.map((restaurant) => {
+                    const googleMapsUrl = `https://www.google.com/maps?q=${restaurant.name} ${restaurant.lat},${restaurant.lng}`;
+                    return (
+                      <div key={restaurant.id} className={styles.slide}>
+                        <div className={styles.images_conatiner}>
+                          {restaurant.photo && (
+                            <img
+                              src={restaurant.photo}
+                              alt="店舗写真"
+                              className={styles.store_photo}
+                            />
+                          )}
+                          <h3>営業時間</h3>
+                          <p>{restaurant.open.split("（")[0].trim()}</p>
+                        </div>
+                        <div className={styles.store_text}>
+                          <h3>
+                            {restaurant.name.length > 15
+                              ? `${restaurant.name.substring(0, 15)} . . .`
+                              : restaurant.name}
+                          </h3>
+                          <h2 className={styles.genre_container}># {restaurant.genre}</h2>
+                          <h3 className={styles.budget_container}>
+                            <RiMoneyCnyCircleFill />
+                            {restaurant.budget || "不明"}
+                          </h3>
+                          <a
+                            href={googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.address_link}
+                          >
+                            マップで表示
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={startSliding}
+              disabled={isLoading || isSliding}
+              className={styles.search_button}
             >
-              {favorites.map((restaurant) => {
-                const googleMapsUrl = `https://www.google.com/maps?q=${restaurant.name} ${restaurant.lat},${restaurant.lng}`;
-                return (
-                  <div key={restaurant.id} className={styles.slide}>
-                    <div className={styles.images_conatiner}>
-                      {restaurant.photo && (
-                        <img
-                          src={restaurant.photo}
-                          alt="店舗写真"
-                          className={styles.store_photo}
-                        />
-                      )}
-                      <h3>営業時間</h3>
-                      <p>{restaurant.open.split("（")[0].trim()}</p>
-                    </div>
-                    <div className={styles.store_text}>
-                      <h3>
-                        {restaurant.name.length > 15
-                          ? `${restaurant.name.substring(0, 15)} . . .`
-                          : restaurant.name}
-                      </h3>
-                      <h2 className={styles.genre_container}># {restaurant.genre}</h2>
-                      <h3 className={styles.budget_container}>
-                        <RiMoneyCnyCircleFill />
-                        {restaurant.budget || "不明"}
-                      </h3>
-                      <a
-                        href={googleMapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.address_link}
-                      >
-                        マップで表示
-                      </a>
-                    </div>
-                  </div>
-                );
-              })}
+              {isSliding ? "・・・" : "開始"}
+            </button>
+  
+            <div className={styles.map_container}>
+              {user && (
+                <MapComponent
+                  userId={user.uid}
+                  selectedRestaurantId={favorites[currentIndex]?.id || null}
+                  onRestaurantClick={handleRestaurantClick}
+                  restaurants={favorites}
+                />
+              )}
             </div>
           </div>
-        </div>
-        <button
-          onClick={startSliding}
-          disabled={isLoading || isSliding}
-          className={styles.search_button}
-        >
-          {isSliding ? "・・・" : "開始"}
-        </button>
-
-        <div className={styles.map_container}>
-          {user && (
-            <MapComponent
-              userId={user.uid}
-              selectedRestaurantId={favorites[currentIndex]?.id || null}
-              onRestaurantClick={handleRestaurantClick}
-              restaurants={favorites}
-            />
-          )}
-        </div>
-      </div>
+        </>
+      )}
       <Footer />
     </div>
-  );
+  );  
 };
 
 export default FavoriteRestaurantRoulette;
