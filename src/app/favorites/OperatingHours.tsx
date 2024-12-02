@@ -32,10 +32,15 @@ const parseDays = (dayStr: string): string[] => {
 };
 
 const OperatingHours: React.FC<OperatingHoursProps> = ({ hours }) => {
-  const today = daysOfWeek[new Date().getDay() - 1]; // 今日の曜日を取得
+  // If hours is not provided, return an empty table or a fallback message
+  if (!hours) {
+    return <div>営業時間情報がありません。</div>;
+  }
+
+  const today = daysOfWeek[new Date().getDay() - 1]; // 今日の曜日
   const hoursArray = hours.split('）').map(hour => hour.trim() + '）').filter(hour => hour.length > 1);
 
-  // 各曜日ごとの営業時間データを作成
+  // 営業時間を曜日ごとにマッピング
   const operatingHours = daysOfWeek.map((day) => {
     let time = '';
 
@@ -51,6 +56,8 @@ const OperatingHours: React.FC<OperatingHoursProps> = ({ hours }) => {
   });
 
   return (
+    <div>
+    <p>営業時間:</p>
     <div className={styles.operatingHours}>
       <table className={styles.table}>
         <thead>
@@ -78,6 +85,7 @@ const OperatingHours: React.FC<OperatingHoursProps> = ({ hours }) => {
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

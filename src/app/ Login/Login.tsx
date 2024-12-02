@@ -14,7 +14,7 @@ import {
   FormLabel,
   Text,
 } from '@chakra-ui/react';
-import { signInWithPopup, signInWithRedirect, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, googleProvider } from '../hooks/firebase';
 import { onAuthStateChangedListener } from '../hooks/login';
 import styles from './Login.module.css';
@@ -56,16 +56,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      // 画面幅が768px以下（スマホ）の場合はリダイレクト方式でログイン
-      if (window.innerWidth <= 768) {
-        await signInWithRedirect(auth, googleProvider);
-      } else {
         await signInWithPopup(auth, googleProvider);
-      }
       onClose();
     } catch (error) {
       setError("Googleアカウントでのログインに失敗しました");
       console.error("Google sign-in failed:", error);
+      alert('google error ');
     }
   };
 
@@ -89,7 +85,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <FormControl mb={4}>
             <FormLabel className={styles.text}>メールアドレス</FormLabel>
             <Input
-              className={styles.emailform}
+              className={styles.form}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -97,8 +93,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             />
           </FormControl>
           <FormControl mb={4}>
-            <FormLabel className={styles.pass}>パスワード</FormLabel>
+            <FormLabel className={styles.text}>パスワード</FormLabel>
             <Input
+              className={styles.form}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

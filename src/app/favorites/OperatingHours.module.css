@@ -36,7 +36,7 @@
   @media (max-width: 600px) {
     .operatingHours {
         text-align: center;
-        margin: 20px;
+        margin: 0;
         overflow-x: auto; /* モバイルで横スクロールを有効化 */
         max-width: 100%; /* 画面サイズに収まるように幅を制限 */
     }

@@ -1,6 +1,6 @@
 /* Login.module.css */
 .modalContent {
-  width: 700px !important;
+  width: 500px !important;
   height: 600px !important;
   background-color: white;
   position: fixed !important;
@@ -33,6 +33,7 @@
 
 .hed {
   margin-bottom: 10%;
+  font-size: 25px;
 }
 .bod {
   margin-bottom: 7%;
@@ -54,17 +55,14 @@
 }
 
 .text {
-  margin-left: 50px;
+  margin-left: 140px;
   margin-bottom: 15px;
 }
-.emailform {
+.form {
   margin-bottom: 15px;
+  width: 400px;
+  height:30px;
 } 
-.pass {
-  margin-left: 50px;
-  margin-bottom: 15px;
-  
-}
 
 .btn{
   margin-bottom: 40px;
@@ -79,8 +77,8 @@
   background: rgb(149,202,252);
   background: linear-gradient(270deg, rgba(149,202,252,1) 0%, rgba(107,182,255,1) 100%);
   border:none;
-  width: 100px;
-  height:30px;
+  width: 400px;
+  height:35px;
 }
 .btn:hover{
   background: rgb(117,188,255);
@@ -99,10 +97,48 @@
   background: rgb(149,202,252);
   background: linear-gradient(270deg, rgba(149,202,252,1) 0%, rgba(107,182,255,1) 100%);
   border:none;
-  width: 170px;
+  width: 400px;
   height:40px;
 }
 .btnGoogle:hover{
   background: rgb(117,188,255);
   background: linear-gradient(270deg, rgba(117,188,255,1) 0%, rgba(62,159,252,1) 100%);
+}
+@media (max-width: 768px) {
+  .modalContent {
+    width: 90% !important;
+    height: 75% !important;
+    background-color: white;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .modalBody {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* ModalBody と ModalFooter の間隔を開ける */
+  }
+.text {
+  margin-left:25%;
+}
+.form {
+  width: 100%;
+}
+.btnGoogle {
+  width:100%;
+}
+.btn {
+  width:100%;
+}
 }
