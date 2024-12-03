@@ -184,7 +184,8 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                     </select>
                 </div>
             )}
-            {locationChoice !== 'roulette' && (
+
+            {locationChoice === 'current' && (
                 <>
                     <div className={styles.selectGroup}>
                         <label htmlFor="category">カテゴリを選択</label>
@@ -226,6 +227,42 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                             <option value={50}>50件</option>
                         </select>
                     </div>
+                </>
+            )}
+
+            {locationChoice === 'prefecture' && (
+                <>
+                <div className={styles.selectGroup}>
+                <label htmlFor="category">カテゴリを選択</label>
+                <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
+                    <option value="">全選択</option>
+                    <option value="G001">居酒屋</option>
+                    <option value="G002">ダイニングバー・バル</option>
+                    <option value="G003">創作料理</option>
+                    <option value="G004">和食</option>
+                    <option value="G005">洋食</option>
+                    <option value="G006">イタリアン・フレンチ</option>
+                    <option value="G007">中華</option>
+                    <option value="G008">焼肉・ホルモン</option>
+                    <option value="G009">アジア・エスニック料理</option>
+                    <option value="G010">各国料理</option>
+                    <option value="G011">カラオケ・パーティ</option>
+                    <option value="G012">バー・カクテル</option>
+                    <option value="G013">ラーメン</option>
+                    <option value="G014">カフェ・スイーツ</option>
+                </select>
+                </div>
+                
+                <div className={styles.selectGroup}>
+                    <label htmlFor="count">表示件数</label>
+                    <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
+                        <option value={10}>10件</option>
+                        <option value={20}>20件</option>
+                        <option value={30}>30件</option>
+                        <option value={40}>40件</option>
+                        <option value={50}>50件</option>
+                    </select>
+                </div>
                 </>
             )}
             {locationChoice === 'roulette' && (
