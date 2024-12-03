@@ -1,24 +1,295 @@
+/* Mypageの全体コンテナ */
 .mypageContainer {
-    text-align: center;
-}
-
-.button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.button:hover {
-    background-color: #45a049;
-}
-.off_mypage {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 115vh; 
+    background-color: #feffe0;
+  }
+  
+  /* ローディング時の表示 */
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* 高さを画面全体に */
+  }
+  
+  .loadingText {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #555;
+  }
+  .avatarContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  /* プロフィールカード */
+  .profileCard {
+    padding: 20px;
     text-align: center;
-    margin-top: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .profileCard_sub {
+    margin-left: 34px;
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .my_page_text {
+    font-size: 34px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+    font-family: serif;
+  }
+  .username {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+    font-family: serif;
+  }
+  
+  .userEmail {
+    font-size: 12px;
+    color: #777;
+  }
+  
+/* 編集画面を中央に固定 */
+.editContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    height: 47%;
+    max-width: 409px;
+    justify-content: center;
 }
+
+/* 編集画面タイトル（左上に固定） */
+.editContainer h3 {
+    position: absolute;
+    top: 10px; /* 上から10px */
+    left: 20px; /* 左から20px */
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0; /* マージンをリセット */
+}
+
+/* 編集ボタン */
+.editContainer .updateButton,
+.editContainer .closeButton {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* スムーズなエフェクト */
+}
+  
+  .editContainer .updateButton {
+    width: 180px;
+    background-color: #3981e7;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .editContainer .closeButton {
+    background-color: #e53e3e;
+    width: 200px;
+  }
+  .editContainer .closeButton:hover {
+    background-color: #b23131;
+    color: white;
+    transform: translateY(-2px);
+  }
+  .editContainer .updateButton:active {
+    background-color: #b23131;
+    transform: translateY(0);
+  }
+  
+  .editContainer .updateButton:hover {
+    background-color: #3d73be;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .editContainer .updateButton:active {
+    background-color: #3d73be;
+    transform: translateY(0);
+  }
+  
+  .editContainer .closeButton {
+    margin-top: 50px;
+  }
+
+  /* 編集ボタン */
+  .button01 {
+    position: relative;
+    color: #fff;
+    font-weight: bold;
+    background: orange;
+    padding: 12px 20px;
+    width: 100%;
+    max-width: 150px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px; /* 上の間隔を調整 */
+    transition: background-color 0.3s ease;
+  }
+  
+  .button01:hover {
+    background-color: rgb(214, 142, 9);
+  }
+  
+  .button01::before {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin: auto;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* お問い合わせフォームのスタイリング */
+.contactForm {
+    background-color: #f9f9f9; /* 背景色 */
+    border-radius: 8px; /* 角を丸く */
+    padding: 8px 12px 8px 12px; /* 内部の余白 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 軽い影をつける */
+  }
+  
+  .contactForm h2 {
+    font-size: 20px; /* タイトルの文字サイズ */
+    color: #333; /* タイトルの文字色 */
+    margin-bottom: 10px; /* タイトル下の余白 */
+  }
+  
+  .contactForm textarea {
+    width: 100%; /* 幅を100%に */
+    padding: 10px; /* 内部の余白 */
+    border-radius: 4px; /* 角を丸く */
+    border: 1px solid #ccc; /* 枠線の色 */
+    font-size: 1rem; /* フォントサイズ */
+    color: #333; /* 文字色 */
+    resize: vertical; /* 垂直方向のみリサイズ可能 */
+    outline: none; /* フォーカス時の枠線を消す */
+    transition: border-color 0.3s; /* フォーカス時に枠線の色が変わる */
+  }
+  
+  .contactForm textarea:focus {
+    border-color: #4caf50; /* フォーカス時に枠線を緑色に */
+  }
+  
+  .contactForm button {
+    background-color: #4caf50; /* ボタンの背景色 */
+    color: #fff; /* 文字色 */
+    padding: 10px 20px; /* 内部の余白 */
+    border: none; /* 枠線を消す */
+    border-radius: 4px; /* 角を丸く */
+    font-size: 1rem; /* フォントサイズ */
+    cursor: pointer; /* カーソルをポインタに変更 */
+    transition: background-color 0.3s; /* ホバー時に背景色が変わる */
+  }
+  
+  .contactForm button:hover {
+    background-color: #45a049; /* ホバー時の背景色 */
+  }
+  
+  /* ログアウトボタン */
+  .button_logout {
+    text-align: center;
+    position: relative;
+    color: #fff;
+    font-weight: bold;
+    background: rgb(83, 64, 150);
+    padding: 12px 20px;
+    width: 200px;
+    max-width: 200px;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 20%;
+  }
+  
+  .button_logout:hover {
+    background-color: rgb(63, 48, 108);
+  }
+  
+  .button_logout::before {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin: auto;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+    -webkit-transform: translateY(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  
+  /* 編集ボタン・ログアウトボタン */
+  .loginPrompt {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    margin: 20px;
+  }
+  
+  .loginPrompt p {
+    margin-bottom: 10px;
+  }
+  
+  /* フッター */
+  .footer {
+    margin-top: 40px;
+    color: #999;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  /* モーダルのスタイル */
+  .LoginModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }  
+
+  .Input_text {
+    margin-top: 4px;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    text-align: center;
+  }
