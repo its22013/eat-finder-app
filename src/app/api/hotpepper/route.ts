@@ -17,6 +17,7 @@ export async function GET(req: Request) {
     const service_a = searchParams.get('service_area')
     const range = searchParams.get('range') || '3';
     const apikey = process.env.SEARCH_API_KEY;
+    const genre = searchParams.get('genre') || '';
     if (!apikey) {
         return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
     }
@@ -39,7 +40,7 @@ export async function GET(req: Request) {
         lat: lat,
         lng: lng,
         range:range, 
-
+        genre: genre,
     });
 
     const url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?${params}`;

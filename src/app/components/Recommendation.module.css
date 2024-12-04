@@ -1,0 +1,39 @@
+.recommendationsContainer {
+    display: flex; /* フレックスボックスで横並びにする */
+    justify-content: center; /* 中央揃え */
+    flex-wrap: wrap; /* 幅が足りない場合、折り返しを許可 */
+    gap: 4%; /* 各アイテム間の余白 */
+    width: 100%; /* コンテナの幅を全体に広げる */
+    padding: 20px 0; /* 上下に余白を追加 */
+}
+
+.restaurant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15%; /* 各レストランカードの幅を指定 */
+    border: 1px solid #ddd; /* 枠線を追加 */
+    border-radius: 10px; /* 角を丸める */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 影を追加 */
+    padding: 10px;
+}
+
+.restaurant img {
+    width: 100%; /* 画像をカードの幅に合わせる */
+    border-radius: 5px; /* 画像の角を丸める */
+}
+
+.restaurant h2 {
+    font-size: 18px;
+    margin: 10px 0 5px;
+}
+
+.restaurant p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+    text-align: center; /* テキストを中央揃えにする */
+}
+.resutaurantgn{
+    font-weight: bold;
+}

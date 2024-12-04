@@ -256,6 +256,8 @@ export default function StoreSearch() {
     }
 
     const docRef = collection(db, 'users', user.uid, 'favorites');
+    const recommendationsRef = collection(db, 'users', user.uid, 'recommendation');
+
     let updatedFavorites = [...favorites];
     const isAlreadyFavorite = favorites.some((fav) => fav.id === restaurant.id);
 
@@ -263,7 +265,11 @@ export default function StoreSearch() {
       // お気に入りから削除
       updatedFavorites = updatedFavorites.filter((fav) => fav.id !== restaurant.id);
       const docToDelete = doc(db, 'users', user.uid, 'favorites', restaurant.id);
-      await deleteDoc(docToDelete);
+      const recommendationDocToDelete = doc(db, 'users', user.uid, 'recommendation', restaurant.id);
+      await Promise.all ( [
+        deleteDoc(docToDelete),
+        deleteDoc(recommendationDocToDelete)
+    ]);
       alert('お気に入りから削除しました！');
     } else {
       // お気に入りに追加
@@ -278,7 +284,13 @@ export default function StoreSearch() {
         lat: restaurant.lat,
         lng: restaurant.lng,
       };
-      await setDoc(doc(db, 'users', user.uid, 'favorites', restaurant.id), restaurantData);
+      const favoriteDoc = doc(db, 'users', user.uid, 'favorites', restaurant.id);
+      const recommendationDoc = doc(db, 'users', user.uid, 'recommendation', restaurant.id);
+  
+      await Promise.all([
+        setDoc(favoriteDoc, restaurantData),
+        setDoc(recommendationDoc, restaurantData),
+      ]);
       updatedFavorites.push(restaurantData);
       alert('お気に入りに追加しました！');
     }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from '@/app/components/Footer';
 import style from '@/app/home.module.css';
 import { useRouter } from 'next/navigation'; 
+import Recommendations from './components/Recommendations';
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -37,12 +38,13 @@ const Home: React.FC = () => {
 
           <button onClick={handleForm02} className={style.button}>キーワードで検索</button>
 
-          {/* 最近閲覧した飲食店 */}
+          {/* おすすめの飲食店 */}
           <div className={style.text_container}>
             <hr className={style.line} />
-            <h1 className={style.text02}>最近閲覧した飲食店</h1>
+            <h1 className={style.text02}>おすすめの飲食店</h1>
             <hr className={style.line} />
           </div>
+          <Recommendations />
         </div>
       </main>
       <Footer />
