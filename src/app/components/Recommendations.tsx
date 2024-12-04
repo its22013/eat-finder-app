@@ -48,7 +48,7 @@ const Recommendations: React.FC = () => {
         }
 
         const userId = user.uid;
-        const recommendationRef = collection(db, `users/${userId}/recommendation`);
+        const recommendationRef = collection(db, `users/${userId}/favorites`);
         const snapshot = await getDocs(recommendationRef);
 
         // ジャンルをカウント

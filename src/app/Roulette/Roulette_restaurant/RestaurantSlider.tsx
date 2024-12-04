@@ -103,7 +103,7 @@ const RestaurantSlider = ({
     }
 
     const docRef = collection(db, "users", user.uid, "favorites");
-    const recommendationsRef = collection(db, 'users', user.uid, 'recommendation');
+  
     let updatedFavorites = [...favorites];
 
     // お気に入りに追加または削除
@@ -113,10 +113,9 @@ const RestaurantSlider = ({
       // お気に入りから削除
       updatedFavorites = updatedFavorites.filter((fav) => fav.id !== restaurantId);
       const docToDelete = doc(db, "users", user.uid, "favorites", restaurantId);
-      const recommendationDocToDelete = doc(db, 'users', user.uid, 'recommendation', restaurant.id);
+   
       await Promise.all ([
         deleteDoc(docToDelete),
-        deleteDoc(recommendationDocToDelete)
       ]); // お気に入り削除
       alert("お気に入りから削除しました！");
     } else {
@@ -133,11 +132,9 @@ const RestaurantSlider = ({
         lng: restaurant.lng,
       };
       const favoriteDoc = doc(db, 'users', user.uid, 'favorites', restaurant.id);
-      const recommendationDoc = doc(db, 'users', user.uid, 'recommendation', restaurant.id);
   
       await Promise.all([
         setDoc(favoriteDoc, restaurantData),
-        setDoc(recommendationDoc, restaurantData),
       ]);
       updatedFavorites.push(restaurantData);
       alert("お気に入りに追加しました！");
