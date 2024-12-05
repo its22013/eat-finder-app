@@ -1,7 +1,7 @@
 .recommendationsContainer {
-    display: flex; /* フレックスボックスで横並びにする */
+    display: flex;
     justify-content: center; /* 中央揃え */
-    flex-wrap: wrap; /* 幅が足りない場合、折り返しを許可 */
+    flex-wrap: wrap; /* 折り返しを許可 */
     gap: 4%; /* 各アイテム間の余白 */
     width: 100%; /* コンテナの幅を全体に広げる */
     padding: 20px 0; /* 上下に余白を追加 */
@@ -11,11 +11,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 15%; /* 各レストランカードの幅を指定 */
+    width: 15%; /* デスクトップ用カード幅 */
     border: 1px solid #ddd; /* 枠線を追加 */
     border-radius: 10px; /* 角を丸める */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 影を追加 */
     padding: 10px;
+    transition: width 0.3s ease; /* サイズ変更のスムーズなアニメーション */
 }
 
 .restaurant img {
@@ -34,6 +35,20 @@
     margin: 5px 0;
     text-align: center; /* テキストを中央揃えにする */
 }
-.resutaurantgn{
+
+.resutaurantgn {
     font-weight: bold;
+}
+
+/* モバイル用のレイアウト */
+@media (max-width: 768px) {
+    .recommendationsContainer {
+        flex-direction: column; /* 縦に並べる */
+        align-items: center; /* 中央揃え */
+        gap: 20px; /* 各カードの間隔を広げる */
+    }
+
+    .restaurant {
+        width: 80%; /* カードを画面幅いっぱいに広げる */
+    }
 }

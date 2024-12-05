@@ -81,7 +81,7 @@ const Recommendations: React.FC = () => {
           service_area: "",
           lat: "",
           lng: "",
-          range: "3",
+          range: "",
         };
 
         const params = new URLSearchParams(paramsObject);
