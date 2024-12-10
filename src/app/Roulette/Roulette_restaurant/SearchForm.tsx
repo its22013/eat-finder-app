@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getDocs, collection, doc } from "firebase/firestore";
+import { getDocs, collection, doc, updateDoc, increment, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../hooks/firebase";  
 import styles from "./style/SearchForm.module.css";
 
@@ -126,6 +126,10 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
 
             const data = await response.json();
             setRestaurants(data.results?.shop || []);
+
+            // Firebaseにカテゴリを保存
+            await saveCategoryToFirebase(category, userId)
+
             setMapActive(true);
         } catch (error) {
             console.error("Search error:", error);
@@ -135,6 +139,53 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
         }
     };
 
+    const resetCategoryCountIfNewMonth = async (category: string) => {
+        const currentDate = new Date();
+        const currentDay = currentDate.getDate();
+        
+        // 月初(1日)の場合にリセット処理
+        if (currentDay === 1) {
+            try {
+                const genreRef = doc(db, "genre", category);
+                await updateDoc(genreRef, { count: 0 });  // `count` を 0 にリセット
+                console.log(`カテゴリー ${category} のカウントをリセットしました`);
+            } catch (error) {
+                console.error("カウントのリセットに失敗しました:", error);
+            }
+        }
+    };    
+
+    // Firebase にカテゴリを保存する関数
+    const saveCategoryToFirebase = async (category: string, userId: string | null) => {
+        try {
+            // グローバルカテゴリの保存処理
+            const genreRef = doc(db, "genre", category);
+            const genreDoc = await getDoc(genreRef);
+
+            if (genreDoc.exists()) {
+                await updateDoc(genreRef, { count: increment(1) });
+            } else {
+                await setDoc(genreRef, { count: 1 });
+            }
+
+            await resetCategoryCountIfNewMonth(category);
+
+            // ユーザーごとのカテゴリ保存処理
+            if (userId) {
+                const userGenreRef = doc(db, "users", userId, "genre", category);
+                const userGenreDoc = await getDoc(userGenreRef);
+
+                if (userGenreDoc.exists()) {
+                    await updateDoc(userGenreRef, { count: increment(1) });
+                } else {
+                    await setDoc(userGenreRef, { count: 1 });
+                }
+            }
+        } catch (error) {
+            console.error("Firebase への保存に失敗しました:", error);
+        }
+    };
+    
     return (
         <div className={styles.container}>
             <div className={styles.radioGroup}>
@@ -205,6 +256,9 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                             <option value="G012">バー・カクテル</option>
                             <option value="G013">ラーメン</option>
                             <option value="G014">カフェ・スイーツ</option>
+                            <option value="G015">その他・グルメ</option>
+                            <option value="G016">お好み焼き・もんじゃ</option>
+                            <option value="G017">韓国料理</option>
                         </select>
                     </div>
                     <div className={styles.selectGroup}>

@@ -185,7 +185,7 @@ const Mypage: React.FC = () => {
         <div className={styles.profileCard}>
           <div className={styles.avatarContainer}>
             <img
-              src={user.photoURL || "/default-avatar.png"}
+              src={user.photoURL || "/images/default-avatar.png"}
               alt="プロフィール画像"
               className={styles.avatar}
             />
@@ -217,7 +217,7 @@ const Mypage: React.FC = () => {
 
           <div className={styles.profileCard_sub}>
             <h1 className={styles.my_page_text}>-マイページ-</h1>
-            <h1 className={styles.username}>{displayName} さん</h1>
+            <h1 className={styles.username}>{displayName || "ゲスト"}さん</h1>
             <p className={styles.userEmail}>{user.email}</p>
           </div>
         </div>
