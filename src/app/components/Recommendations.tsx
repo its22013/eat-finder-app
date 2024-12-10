@@ -11,102 +11,145 @@ interface Restaurant {
   photo: string;
   address: string;
   sub_genre: string;
+  lat: string;
+  lng: string;
 }
-
-// ジャンル名とコードの対応表
-const genreMapping: { [key: string]: string } = {
-  居酒屋: "G001",
-  "ダイニングバー・バル": "G002",
-  創作料理: "G003",
-  和食: "G004",
-  洋食: "G005",
-  "イタリアン・フレンチ": "G006",
-  中華: "G007",
-  "焼肉・ホルモン": "G008",
-  韓国料理: "G017",
-  "アジア・エスニック料理": "G009",
-  各国料理: "G010",
-  "カラオケ・パーティ": "G011",
-  "バー・カクテル": "G012",
-  ラーメン: "G013",
-  "お好み焼き・もんじゃ": "G016",
-  "カフェ・スイーツ": "G014",
-  その他グルメ: "G015",
-};
 
 const Recommendations: React.FC = () => {
   const [recommendedRestaurants, setRecommendedRestaurants] = useState<Restaurant[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth(); // 現在の認証状態を取得
+  const [searchCategories, setSearchCategories] = useState<string[]>([]); // 複数カテゴリ
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
-    const fetchRecommendations = async () => {
+    const getUserLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setUserLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("位置情報の取得に失敗しました", error);
+            setError("位置情報の取得に失敗しました");
+          }
+        );
+      } else {
+        setError("位置情報取得がサポートされていません");
+      }
+    };
+
+    getUserLocation();
+  }, []);
+
+  useEffect(() => {
+    const fetchSearchCategory = async () => {
       try {
+        let genreWithCount: { genreCode: string; count: number }[] = [];
+
+        if (user) {
+          // ユーザーごとのジャンルデータを取得
+          const userId = user.uid;
+          const genreRef = collection(db, `users/${userId}/genre`);
+          const snapshot = await getDocs(genreRef);
+
+          if (!snapshot.empty) {
+            snapshot.docs.forEach((doc) => {
+              const genreCode = doc.id;
+              const count = doc.data().count;
+              if (genreCode && count !== undefined) {
+                genreWithCount.push({ genreCode, count });
+              }
+            });
+          }
+        }
+
+        // ユーザー固有のデータがない場合、全体のデータを取得
+        if (genreWithCount.length === 0 && user) {
+          const allGenresRef = collection(db, "genre");
+          const globalSnapshot = await getDocs(allGenresRef);
+
+          if (globalSnapshot.empty) {
+            setError("全体のジャンルデータが見つかりません");
+            return;
+          }
+
+          globalSnapshot.docs.forEach((doc) => {
+            const genreCode = doc.id;
+            const count = doc.data().count;
+            if (genreCode && count !== undefined) {
+              genreWithCount.push({ genreCode, count });
+            }
+          });
+        }
+
+        // ログインしていない場合はデフォルトカテゴリを使用
         if (!user) {
-          console.error("User is not authenticated");
+          const defaultGenres = ["G001", "G002", "G003", "G004", "G005", "G006",
+                                "G007", "G008", "G009", "G010", "G011", "G012",
+                                "G013", "G014", 
+          ];
+          const randomGenres = defaultGenres.sort(() => 0.5 - Math.random()).slice(0, 3);
+          setSearchCategories(randomGenres);
           return;
         }
 
-        const userId = user.uid;
-        const recommendationRef = collection(db, `users/${userId}/favorites`);
-        const snapshot = await getDocs(recommendationRef);
+        // 降順でソートして上位3つを取得
+        const sortedGenres = genreWithCount.sort((a, b) => b.count - a.count);
+        const top3Genres = sortedGenres.slice(0, 3).map((item) => item.genreCode);
 
-        // ジャンルをカウント
-        const genreCount: { [key: string]: number } = {};
-        snapshot.docs.forEach((doc) => {
-          const genre = doc.data().genre;
-          if (genre) {
-            genreCount[genre] = (genreCount[genre] || 0) + 1;
-          }
-        });
+        if (!top3Genres.length) {
+          setError("カテゴリが見つかりません");
+          return;
+        }
 
-        // ジャンルを頻度でソート
-        const sortedGenres = Object.entries(genreCount).sort((a, b) => b[1] - a[1]);
-        const mostFrequentGenre = sortedGenres.length > 0 ? sortedGenres[0][0] : null;
+        setSearchCategories(top3Genres);
+      } catch (error) {
+        console.error(error);
+        setError("カテゴリの取得に失敗しました");
+      }
+    };
 
-        // ジャンルコードを取得
-        const genreCode = mostFrequentGenre ? genreMapping[mostFrequentGenre] : "G001"; // デフォルト値
-        console.log("検索するジャンルコード:", genreCode);
-        // APIリクエストパラメータの設定
-        const paramsObject: any = {
-          q: "",
-          genre: genreCode, // ジャンルコード
-          wifi: "0",
-          private_room: "0",
-          lunch: "0",
-          free_drink: "0",
-          free_food: "0",
-          parking: "0",
-          midnight: "0",
-          service_area: "",
-          lat: "",
-          lng: "",
-          range: "",
-        };
+    fetchSearchCategory();
+  }, [user]);
 
-        const params = new URLSearchParams(paramsObject);
-        const res = await fetch(`/api/hotpepper?${params.toString()}`);
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!searchCategories.length || !userLocation) return;
+
+      try {
+        const allRestaurants: Restaurant[] = [];
+        const genreParam = searchCategories.join(",");
+        const queryString = `genre=${genreParam}&lat=${userLocation.lat}&lng=${userLocation.lng}&range=5&count=10`;
+        const url = `/api/Roulette_api?${queryString}`;
+
+        const res = await fetch(url);
         if (!res.ok) {
           throw new Error("Error fetching search results");
         }
 
         const data = await res.json();
-        if (!data.results.shop) {
-          throw new Error("No restaurants found");
+        if (data.results && data.results.shop) {
+          allRestaurants.push(
+            ...data.results.shop.map((shop: any) => ({
+              id: shop.id,
+              name: shop.name,
+              genre: shop.genre.name,
+              photo: shop.photo.pc.m,
+              address: shop.address,
+              sub_genre: shop.sub_genre?.name || "",
+            }))
+          );
         }
 
-        const restaurants: Restaurant[] = data.results.shop
-          .slice(0, 3) // 上位3つを取得
-          .map((shop: any) => ({
-            id: shop.id,
-            name: shop.name,
-            genre: shop.genre.name,
-            photo: shop.photo.pc.m,
-            address: shop.address,
-            sub_genre: shop.sub_genre?.name || '',
-          }));
-
-        setRecommendedRestaurants(restaurants);
+        if (allRestaurants.length > 0) {
+          setRecommendedRestaurants(allRestaurants.slice(0, 3));
+        } else {
+          setError("飲食店が見つかりませんでした");
+        }
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -116,37 +159,40 @@ const Recommendations: React.FC = () => {
       }
     };
 
-    if (user) {
-      fetchRecommendations(); // ユーザーが認証済みの場合のみデータ取得
+    if (searchCategories.length && userLocation) {
+      fetchRecommendations();
     }
-  }, [user]); // ユーザー状態が変化したら再取得
+  }, [searchCategories, userLocation]);
 
   if (error) {
     return <p>エラーが発生しました: {error}</p>;
   }
 
   return (
-    <div className={styles.recommendationsContainer}>
-      {recommendedRestaurants.map((restaurant) => (
-        <div key={restaurant.id} className={styles.restaurant}>
-          <img
-            src={restaurant.photo}
-            alt={restaurant.name}
-            className={styles.restaurantImage}
-          />
-          <h2 className={styles.restaurantName}>{restaurant.name}</h2>
-          <p className={styles.restaurantGenre}>
-            ジャンル: <span className={styles.resutaurantgn}>{restaurant.genre}</span>
-          </p>
-          <p> サブジャンル:{" "}
-          <span style={{ fontWeight: "bold" }}>
-          {restaurant.sub_genre || "なし"}
-         </span>
-          </p>
-          {/* <p className={styles.resutaurantGenre}>サブジャンル:{restaurant}</p> */}
-          <p className={styles.restaurantAddress}>{restaurant.address}</p>
-        </div>
-      ))}
+    <div>
+      <div className={styles.recommendationsContainer}>
+        {recommendedRestaurants.map((restaurant) => (
+          <div key={restaurant.id} className={styles.restaurant}>
+            <img
+              src={restaurant.photo}
+              alt={restaurant.name}
+              className={styles.restaurantImage}
+            />
+            <h2 className={styles.restaurantName}>{restaurant.name}</h2>
+            <p className={styles.restaurantGenre}>
+              ジャンル: <span>{restaurant.genre}</span>
+            </p>
+            <a
+              href={`https://www.google.com/maps?q=${restaurant.name} ${restaurant.lat},${restaurant.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.address_link}
+            >
+              マップで表示
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

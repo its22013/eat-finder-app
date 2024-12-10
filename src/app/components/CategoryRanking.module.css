@@ -1,0 +1,73 @@
+.rankingContainer {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .rankingTitle {
+    font-size: 20px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    background-color: bisque;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .rankingList {
+    list-style: none;
+    padding: 0;
+    max-height: 300px; 
+    overflow-y: auto;
+    padding-top: 10px;
+  }
+  
+  .rankingItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-items: flex-end;
+    text-align: justify;
+  }
+
+  .rankingItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: #a8d4fa;
+  }
+  
+  .rankingPosition {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .rankingName {
+    flex-grow: 1;
+    margin-left: 8px;
+  }
+  
+  .rankingCount {
+    color: #666;
+  }  
+
+  .gold {
+    color: gold;
+  }
+  .silver {
+    color: silver;
+  }
+  .bronze {
+    color: saddlebrown;
+  }
+  
