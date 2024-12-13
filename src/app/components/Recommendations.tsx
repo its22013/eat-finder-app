@@ -3,6 +3,7 @@ import { db } from "@/app/hooks/firebase"; // Firebase初期化ファイル
 import { collection, getDocs } from "firebase/firestore";
 import { useAuth } from "@/app/hooks/login"; // 認証関連のhooksをインポート
 import styles from "./Recommendation.module.css";
+import { RiMoneyCnyCircleFill } from "react-icons/ri";
 
 interface Restaurant {
   id: string;
@@ -13,6 +14,7 @@ interface Restaurant {
   sub_genre: string;
   lat: string;
   lng: string;
+  budget: string;
 }
 
 const Recommendations: React.FC = () => {
@@ -90,8 +92,7 @@ const Recommendations: React.FC = () => {
         if (!user) {
           const defaultGenres = ["G001", "G002", "G003", "G004", "G005", "G006",
                                 "G007", "G008", "G009", "G010", "G011", "G012",
-                                "G013", "G014", 
-          ];
+                                "G013", "G014"];
           const randomGenres = defaultGenres.sort(() => 0.5 - Math.random()).slice(0, 3);
           setSearchCategories(randomGenres);
           return;
@@ -141,6 +142,9 @@ const Recommendations: React.FC = () => {
               photo: shop.photo.pc.m,
               address: shop.address,
               sub_genre: shop.sub_genre?.name || "",
+              lat: shop.lat,
+              lng: shop.lng,
+              budget: shop.budget?.name || "",
             }))
           );
         }
@@ -164,6 +168,23 @@ const Recommendations: React.FC = () => {
     }
   }, [searchCategories, userLocation]);
 
+  // メートル単位で距離を計算
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // 地球の半径（キロメートル）
+    const latDiff = (lat2 - lat1) * (Math.PI / 180); // 緯度差をラジアンに変換
+    const lonDiff = (lon2 - lon1) * (Math.PI / 180); // 経度差をラジアンに変換
+
+    const a =
+      Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(lonDiff / 2) * Math.sin(lonDiff / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distanceInKm = R * c; // 距離をキロメートルで計算
+    const distanceInM = distanceInKm * 1000; // メートルに変換
+    return distanceInM;
+  };
+
   if (error) {
     return <p>エラーが発生しました: {error}</p>;
   }
@@ -171,27 +192,49 @@ const Recommendations: React.FC = () => {
   return (
     <div>
       <div className={styles.recommendationsContainer}>
-        {recommendedRestaurants.map((restaurant) => (
-          <div key={restaurant.id} className={styles.restaurant}>
-            <img
-              src={restaurant.photo}
-              alt={restaurant.name}
-              className={styles.restaurantImage}
-            />
-            <h2 className={styles.restaurantName}>{restaurant.name}</h2>
-            <p className={styles.restaurantGenre}>
-              ジャンル: <span>{restaurant.genre}</span>
-            </p>
-            <a
-              href={`https://www.google.com/maps?q=${restaurant.name} ${restaurant.lat},${restaurant.lng}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.address_link}
-            >
-              マップで表示
-            </a>
-          </div>
-        ))}
+        {recommendedRestaurants.map((restaurant) => {
+          const distance = userLocation
+            ? calculateDistance(
+                userLocation.lat,
+                userLocation.lng,
+                parseFloat(restaurant.lat),
+                parseFloat(restaurant.lng)
+              )
+            : 0;
+          // 距離が1000m以上ならkmに変換、未満ならmのまま表示
+          const formattedDistance =
+            distance >= 1000 ? `${(distance / 1000).toFixed(1)} km` : `${distance.toFixed(0)} m`;
+
+          return (
+            <div key={restaurant.id} className={styles.restaurant}>
+              <img
+                src={restaurant.photo}
+                alt={restaurant.name}
+                className={styles.restaurantImage}
+              />
+              <h2 className={styles.restaurantName}>
+                {restaurant.name.length > 15
+                  ? `${restaurant.name.substring(0, 15)} . . .`
+                  : restaurant.name}
+              </h2>
+              <a><RiMoneyCnyCircleFill /> {restaurant.budget || "情報なし"}</a>
+              <p className={styles.restaurantGenre}>
+                ジャンル: <span>{restaurant.genre}</span>
+              </p>
+              <p className={styles.restaurantDistance}>
+                距離: {formattedDistance}
+              </p>
+              <a
+                href={`https://www.google.com/maps?q=${restaurant.name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.address_link}
+              >
+                マップで表示
+              </a>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

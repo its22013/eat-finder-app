@@ -71,3 +71,65 @@
     color: saddlebrown;
   }
   
+  /* スマホ用のハンバーガーメニューアイコン */
+.hamburgerIcon {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ハンバーガーメニューの内容 */
+.menuContent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  z-index: 999;
+  overflow-y: auto;
+  padding: 20px;
+  display: none;
+}
+
+/* 通常のランキングリスト */
+.desktopContent {
+  display: block;
+  
+}
+
+/* スマホサイズ (768px以下) */
+@media (max-width: 768px) {
+  .rankingList {
+    list-style: none;
+    padding: 0;
+    max-height: 100%; 
+    padding-top: 10px;
+  }
+  .hamburgerIcon {
+    display: flex;
+  }
+
+  .menuContent {
+    display: block;
+    background-color: #ffb659;
+  }
+
+  .desktopContent {
+    display: none;
+  }
+  .rankingItem {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+}

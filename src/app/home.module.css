@@ -73,14 +73,17 @@
     align-items: center;
     justify-content: space-between; /* 横線と文字を一列に配置し、間隔を均等に保つ */
     width: 100%; /* コンテナの幅を全体に広げる */
-    padding: 20px 0; /* 上下に余白を追加 */
+    padding-top: 30px;
 }
 
 /* モバイル用のスタイル */
 @media (max-width: 768px) {
+    .container {
+        height: 120vh;
+    }
     .sub_container {
         flex-direction: column;
-        margin-top: 100px;
+        margin-top: 50px;
         align-items: center;
     }
     .text_container {
@@ -88,5 +91,8 @@
     }
     .text01 {
         position: fixed;
+        z-index: 1;
+        height: 64px;
+        font-size: 21px;
     }
 }
