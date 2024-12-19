@@ -1,10 +1,10 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getDocs, collection, doc, updateDoc, increment, setDoc, getDoc } from "firebase/firestore";
-import { db } from "../../hooks/firebase";  
+import { useState } from "react";
+import CurrentLocationSearch from "./SearchForm/CurrentLocationSearch";
+import PrefectureSearch from "./SearchForm/PrefectureSearch";
+import FavoritesRoulette from "./SearchForm/FavoritesRoulette";
 import styles from "./style/SearchForm.module.css";
+import { doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "@/app/hooks/firebase";
 
 const prefectures = [
     '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
@@ -22,7 +22,7 @@ interface SearchFormProps {
     isLoading: boolean;
     setSliderActive: (active: boolean) => void;
     setMapActive: (active: boolean) => void;
-    userId: string;  // userIdを受け取るプロパティを追加
+    userId: string;
 }
 
 const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, setMapActive, userId }: SearchFormProps) => {
@@ -32,30 +32,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
     const [range, setRange] = useState(5);
     const [count, setCount] = useState(10);
     const [prefecture, setPrefecture] = useState('');
-    const [locationChoice, setLocationChoice] = useState<'current' | 'prefecture' | 'roulette'>('current');
-    const [favoriteCount, setFavoriteCount] = useState<number>(0);  // お気に入り件数の状態を追加
-
-    const router = useRouter();
-
-    useEffect(() => {
-        const fetchFavoriteCount = async (userId: string) => {
-            if (locationChoice === 'roulette') {
-                try {
-                    const favoritesRef = collection(doc(db, "users", userId), "favorites");
-                    const snapshot = await getDocs(favoritesRef);
-                    setFavoriteCount(snapshot.size);
-                } catch (error) {
-                    console.error("お気に入りの取得に失敗しました:", error);
-                    setFavoriteCount(0);
-                }
-            }
-        };
-    
-        if (userId) {
-            fetchFavoriteCount(userId);
-        }
-    }, [locationChoice, userId]); 
-    
+    const [locationChoice, setLocationChoice] = useState<'current' | 'prefecture' | 'roulette' | 'favorites'>('current');
 
     const getCurrentLocation = () => {
         return new Promise<{ latitude: number; longitude: number }>((resolve, reject) => {
@@ -92,11 +69,6 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                 currentLng = currentLocation.longitude;
             }
 
-            if (locationChoice === 'roulette') {
-                router.push('/Roulette/FavoriteRoulette'); // お気に入りルーレット画面に遷移
-                return;
-            }
-
             let url = '/api/Roulette_api?format=json';
 
             if (locationChoice === 'current') {
@@ -128,7 +100,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
             setRestaurants(data.results?.shop || []);
 
             // Firebaseにカテゴリを保存
-            await saveCategoryToFirebase(category, userId)
+            await saveCategoryToFirebase(category, userId);
 
             setMapActive(true);
         } catch (error) {
@@ -139,26 +111,8 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
         }
     };
 
-    const resetCategoryCountIfNewMonth = async (category: string) => {
-        const currentDate = new Date();
-        const currentDay = currentDate.getDate();
-        
-        // 月初(1日)の場合にリセット処理
-        if (currentDay === 1) {
-            try {
-                const genreRef = doc(db, "genre", category);
-                await updateDoc(genreRef, { count: 0 });  // `count` を 0 にリセット
-                console.log(`カテゴリー ${category} のカウントをリセットしました`);
-            } catch (error) {
-                console.error("カウントのリセットに失敗しました:", error);
-            }
-        }
-    };    
-
-    // Firebase にカテゴリを保存する関数
     const saveCategoryToFirebase = async (category: string, userId: string | null) => {
         try {
-            // グローバルカテゴリの保存処理
             const genreRef = doc(db, "genre", category);
             const genreDoc = await getDoc(genreRef);
 
@@ -168,9 +122,6 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                 await setDoc(genreRef, { count: 1 });
             }
 
-            await resetCategoryCountIfNewMonth(category);
-
-            // ユーザーごとのカテゴリ保存処理
             if (userId) {
                 const userGenreRef = doc(db, "users", userId, "genre", category);
                 const userGenreDoc = await getDoc(userGenreRef);
@@ -182,10 +133,10 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                 }
             }
         } catch (error) {
-            console.error("Firebase への保存に失敗しました:", error);
+            console.error("Firebaseエラー:", error);
         }
     };
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.radioGroup}>
@@ -210,123 +161,41 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                 <label>
                     <input
                         type="radio"
-                        value="roulette"
-                        checked={locationChoice === 'roulette'}
-                        onChange={() => setLocationChoice('roulette')}
+                        value="favorites"
+                        checked={locationChoice === 'favorites'}
+                        onChange={() => setLocationChoice('favorites')}
                     />
                     お気に入り
                 </label>
             </div>
-            {locationChoice === 'prefecture' && (
-                <div className={styles.selectGroup}>
-                    <label htmlFor="prefecture">都道府県を選択</label>
-                    <select
-                        id="prefecture"
-                        onChange={(e) => setPrefecture(e.target.value)}
-                        value={prefecture}
-                        className={styles.label_container}
-                    >
-                        <option value="">都道府県を選択</option>
-                        {prefectures.map((pref) => (
-                            <option key={pref} value={pref}>
-                                {pref}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
-
             {locationChoice === 'current' && (
-                <>
-                    <div className={styles.selectGroup}>
-                        <label htmlFor="category">カテゴリを選択</label>
-                        <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
-                            <option value="">全選択</option>
-                            <option value="G001">居酒屋</option>
-                            <option value="G002">ダイニングバー・バル</option>
-                            <option value="G003">創作料理</option>
-                            <option value="G004">和食</option>
-                            <option value="G005">洋食</option>
-                            <option value="G006">イタリアン・フレンチ</option>
-                            <option value="G007">中華</option>
-                            <option value="G008">焼肉・ホルモン</option>
-                            <option value="G009">アジア・エスニック料理</option>
-                            <option value="G010">各国料理</option>
-                            <option value="G011">カラオケ・パーティ</option>
-                            <option value="G012">バー・カクテル</option>
-                            <option value="G013">ラーメン</option>
-                            <option value="G014">カフェ・スイーツ</option>
-                            <option value="G015">その他・グルメ</option>
-                            <option value="G016">お好み焼き・もんじゃ</option>
-                            <option value="G017">韓国料理</option>
-                        </select>
-                    </div>
-                    <div className={styles.selectGroup}>
-                        <label htmlFor="range">範囲</label>
-                        <select id="range" onChange={(e) => setRange(Number(e.target.value))} value={range} className={styles.label_container}>
-                            <option value={1}>300 m</option>
-                            <option value={2}>500 m</option>
-                            <option value={3}>1 km</option>
-                            <option value={4}>2 km</option>
-                            <option value={5}>3 km</option>
-                        </select>
-                    </div>
-                    <div className={styles.selectGroup}>
-                        <label htmlFor="count">表示件数</label>
-                        <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
-                            <option value={10}>10件</option>
-                            <option value={20}>20件</option>
-                            <option value={30}>30件</option>
-                            <option value={40}>40件</option>
-                            <option value={50}>50件</option>
-                        </select>
-                    </div>
-                </>
+                <CurrentLocationSearch
+                    handleSearch={handleSearch}
+                    isLoading={isLoading}
+                    setCategory={setCategory}
+                    setRange={setRange}
+                    setCount={setCount}
+                    category={category}
+                    range={range}
+                    count={count}
+                />
             )}
-
             {locationChoice === 'prefecture' && (
-                <>
-                <div className={styles.selectGroup}>
-                <label htmlFor="category">カテゴリを選択</label>
-                <select id="category" onChange={(e) => setCategory(e.target.value)} value={category} className={styles.label_container}>
-                    <option value="">全選択</option>
-                    <option value="G001">居酒屋</option>
-                    <option value="G002">ダイニングバー・バル</option>
-                    <option value="G003">創作料理</option>
-                    <option value="G004">和食</option>
-                    <option value="G005">洋食</option>
-                    <option value="G006">イタリアン・フレンチ</option>
-                    <option value="G007">中華</option>
-                    <option value="G008">焼肉・ホルモン</option>
-                    <option value="G009">アジア・エスニック料理</option>
-                    <option value="G010">各国料理</option>
-                    <option value="G011">カラオケ・パーティ</option>
-                    <option value="G012">バー・カクテル</option>
-                    <option value="G013">ラーメン</option>
-                    <option value="G014">カフェ・スイーツ</option>
-                </select>
-                </div>
-                
-                <div className={styles.selectGroup}>
-                    <label htmlFor="count">表示件数</label>
-                    <select id="count" onChange={(e) => setCount(Number(e.target.value))} value={count} className={styles.label_container}>
-                        <option value={10}>10件</option>
-                        <option value={20}>20件</option>
-                        <option value={30}>30件</option>
-                        <option value={40}>40件</option>
-                        <option value={50}>50件</option>
-                    </select>
-                </div>
-                </>
+                <PrefectureSearch
+                    prefectures={prefectures}
+                    prefecture={prefecture}
+                    setPrefecture={setPrefecture}
+                    category={category}
+                    count={count}
+                    setCategory={setCategory}
+                    setCount={setCount}
+                    handleSearch={handleSearch}
+                    isLoading={isLoading}
+                />
             )}
-            {locationChoice === 'roulette' && (
-                <h3 className={styles.favoriteCount}>
-                    お気に入りの飲食店: {favoriteCount}件
-                </h3>
+            {locationChoice === 'favorites' && (
+                <FavoritesRoulette userId={userId} />
             )}
-            <button onClick={handleSearch} disabled={isLoading} className={styles.search_button}>
-                {isLoading ? "検索中..." : "検索"}
-            </button>
         </div>
     );
 };

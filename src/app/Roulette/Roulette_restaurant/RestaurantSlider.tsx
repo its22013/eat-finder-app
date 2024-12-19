@@ -30,7 +30,7 @@ const RestaurantSlider = ({
   selectedRestaurantId,
 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSliding, setIsSliding] = useState(false);
+  const [isSliding, setIsSliding] = useState(true);
   const [favorites, setFavorites] = useState<any[]>([]); // 飲食店情報を保存する配列
   const { user } = useAuth(); // ログインユーザーの情報を取得
 
@@ -66,18 +66,21 @@ const RestaurantSlider = ({
     }
   }, [selectedRestaurantId, restaurants]);
 
-  // スライドが終了したときに選択する飲食店を管理する
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (isSliding) {
       setIsLoading(true);
       timer = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % restaurants.length);
+        const randomIndex = Math.floor(Math.random() * restaurants.length);
+        setCurrentIndex(randomIndex);
       }, 100);
+
+      setTimeout(() => {
+        setIsSliding(false);
+      }, 6000);
     } else {
       setIsLoading(false);
-      // スライドが停止したら選ばれた飲食店を更新
       const selectedRestaurant = restaurants[currentIndex];
       setSelectedRestaurant(selectedRestaurant);
       console.log("選ばれた飲食店:", selectedRestaurant);
@@ -89,10 +92,7 @@ const RestaurantSlider = ({
   }, [isSliding, restaurants, setIsLoading, currentIndex, setSelectedRestaurant]);
 
   const startSliding = () => {
-    setIsSliding(true);
-    setTimeout(() => {
-      setIsSliding(false); // 3秒後にスライド停止
-    }, 3000);
+    setIsSliding(!isSliding);
   };
 
   // お気に入りを切り替える処理
