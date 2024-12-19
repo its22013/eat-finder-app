@@ -3,9 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { db } from "../../hooks/firebase"; // Firebase設定のインポート
-import { collection, doc, getDocs } from "firebase/firestore"; // Firestoreからのデータ取得
+import { doc, getDoc } from "firebase/firestore"; // Firestoreからのデータ取得
 import styles from "../Roulette_restaurant/style/MapComponent.module.css";
 import { useAuth } from "@/app/hooks/login";
+import { useParams } from "next/navigation"; // useParamsを修正
 
 interface Restaurant {
   id: string;
@@ -18,13 +19,6 @@ interface Restaurant {
   photo: string;
   genre: string;
   budget: string;
-}
-
-interface MapComponentProps {
-  userId: string; // ユーザーID
-  selectedRestaurantId: string | null;
-  onRestaurantClick: (id: string) => void;
-  restaurants: Restaurant[];
 }
 
 const DEFAULT_CENTER: [number, number] = [26.1564543, 127.6600793]; // 沖縄
@@ -43,132 +37,74 @@ const createIcon = (iconUrl: string, size: [number, number] = [25, 41]): L.Icon 
 };
 
 // マップの中心を更新するコンポーネント
-const MapViewUpdater = ({
-  center,
-  zoom,
-}: {
-  center: [number, number];
-  zoom: number;
-}) => {
+const MapViewUpdater = ({ center }: { center: [number, number] }) => {
   const map = useMap();
   useEffect(() => {
-    if (center && center[0] !== undefined && center[1] !== undefined) {
-      map.setView(center, zoom);
+    if (center) {
+      map.setView(center);
     }
-  }, [center, zoom, map]);
+  }, [center, map]);
   return null;
 };
 
-// マーカーコンポーネント
-const RestaurantMarker = ({
-  restaurant,
-  isSelected,
-  onClick,
+const MapComponent = ({
+  userId,
+  selectedRestaurantId,
+  onRestaurantClick,
 }: {
-  restaurant: Restaurant;
-  isSelected: boolean;
-  onClick: () => void;
+  userId: string;
+  selectedRestaurantId: string | null;
+  onRestaurantClick: (id: string) => void;
 }) => {
-  const icon = isSelected
-    ? createIcon("/images/makar01.png", [70, 45])
-    : createIcon("/images/marker-icon.png");
-
-  return (
-    <Marker position={[restaurant.lat, restaurant.lng]} icon={icon} eventHandlers={{ click: onClick }}>
-      <Popup>
-        <strong>{restaurant.name}</strong>
-        <br />
-        <em>{restaurant.genre}</em>
-        <br />
-        {restaurant.address && <p>住所: {restaurant.address}</p>}
-      </Popup>
-    </Marker>
-  );
-};
-
-const MapComponent = ({ userId, selectedRestaurantId, onRestaurantClick }: MapComponentProps) => {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]); // お気に入り飲食店
-  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
-  const { user } = useAuth();
+  const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null);
+  const { rouletteId } = useParams(); // URLのパラメータからrouletteIdを取得
 
-  // Firestoreからお気に入り飲食店を取得
+  // Firestoreから飲食店データを取得
   useEffect(() => {
-    const fetchFavorites = async () => {
-      if (!user?.uid) return;
-
-      try {
-        const favoritesRef = collection(doc(db, "users", userId), "favorites");
-        const querySnapshot = await getDocs(favoritesRef);
-
-        const fetchedRestaurants: Restaurant[] = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data) {
-            fetchedRestaurants.push({
-              id: doc.id,
-              name: data.name,
-              address: data.address,
-              phone: data.phone,
-              open: data.open,
-              lat: data.lat,
-              lng: data.lng,
-              photo: data.photo,
-              genre: data.genre,
-              budget: data.budget,
-            });
-          }
-        });
-
-        console.log("Fetched restaurants:", fetchedRestaurants);
-        setRestaurants(fetchedRestaurants);
-
-        if (fetchedRestaurants.length > 0) {
-          const firstRestaurant = fetchedRestaurants[0];
-          setMapCenter([firstRestaurant.lat, firstRestaurant.lng]);
-        }
-      } catch (error) {
-        console.error("お気に入りの取得エラー:", error);
-      }
-    };
-
-    fetchFavorites();
-  }, [user?.uid, userId]);
-
-  // 現在地取得（クライアントサイドでのみ実行）
-  useEffect(() => {
-    // サーバーサイドでwindowやnavigator.geolocationを使用しないようにする
-    if (typeof window !== "undefined" && navigator.geolocation) {
-      const fetchCurrentLocation = async () => {
+    if (userId && rouletteId) {
+      const fetchRestaurantDetails = async () => {
         try {
-          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-          const location = { lat: position.coords.latitude, lng: position.coords.longitude };
-          setCurrentLocation(location);
+          const id = Array.isArray(rouletteId) ? rouletteId[0] : rouletteId;
 
-          // 飲食店がない場合のみ現在地を中心に設定
-          if (restaurants.length === 0) {
-            setMapCenter([location.lat, location.lng]);
+          const docRef = doc(db, "users", userId, "favorites_roulette", id);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            console.log("データ取得:", data); // デバッグ用ログ
+            if (data?.restaurantDetails && Array.isArray(data.restaurantDetails)) {
+              setRestaurants(data.restaurantDetails);
+            } else {
+              console.error("restaurantDetails が存在しないか、形式が異なります");
+            }
+          } else {
+            console.error("指定されたルーレットが見つかりません");
           }
         } catch (error) {
-          console.error("現在地の取得エラー:", error);
-          // 現在地取得エラー時の処理
-          setCurrentLocation(null);
+          console.error("データ取得エラー:", error);
         }
       };
 
-      fetchCurrentLocation();
+      fetchRestaurantDetails();
     }
-  }, [restaurants]);
+  }, [userId, rouletteId]);
 
-  // 飲食店リストが更新された場合のマップ中心設定
+  // 現在地を取得
   useEffect(() => {
-    if (restaurants.length > 0) {
-      const firstRestaurant = restaurants[0];
-      setMapCenter([firstRestaurant.lat, firstRestaurant.lng]);
-    }
-  }, [restaurants]);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const userLocation: [number, number] = [latitude, longitude];
+        setCurrentLocation(userLocation);
+        setMapCenter(userLocation);
+      },
+      (error) => {
+        console.error("現在地の取得に失敗しました:", error);
+      }
+    );
+  }, []);
 
   // 選択された飲食店の中心設定
   useEffect(() => {
@@ -187,34 +123,41 @@ const MapComponent = ({ userId, selectedRestaurantId, onRestaurantClick }: MapCo
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {/* マップ中心を更新 */}
-      <MapViewUpdater center={mapCenter} zoom={DEFAULT_ZOOM} />
+      <MapViewUpdater center={mapCenter} />
 
       {/* 現在地マーカー */}
       {currentLocation && (
         <Marker
-          position={[currentLocation.lat, currentLocation.lng]}
-          icon={createIcon("/images/current-location-icon.png", [41, 41])}
+          position={currentLocation}
+          icon={createIcon("/images/current-location-icon.png", [40, 40])}
         >
-          <Popup>
-            <strong>現在地</strong>
-          </Popup>
+          <Popup>あなたの現在地</Popup>
         </Marker>
       )}
 
       {/* 飲食店マーカー */}
-      {restaurants.length > 0 && restaurants.map(
-        (restaurant) =>
-          restaurant.lat &&
-          restaurant.lng && (
-            <RestaurantMarker
-              key={restaurant.id}
-              restaurant={restaurant}
-              isSelected={restaurant.id === selectedRestaurantId}
-              onClick={() => onRestaurantClick(restaurant.id)}
-            />
-          )
-      )}
+      {restaurants.map((restaurant) => (
+        <Marker
+          key={restaurant.id}
+          position={[restaurant.lat, restaurant.lng]}
+          icon={
+            restaurant.id === selectedRestaurantId
+              ? createIcon("/images/makar01.png", [70, 45])
+              : createIcon("/images/marker-icon.png")
+          }
+          eventHandlers={{
+            click: () => onRestaurantClick(restaurant.id),
+          }}
+        >
+          <Popup>
+            <strong>{restaurant.name}</strong>
+            <br />
+            <em>{restaurant.genre}</em>
+            <br />
+            {restaurant.address && <p>住所: {restaurant.address}</p>}
+          </Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 };
