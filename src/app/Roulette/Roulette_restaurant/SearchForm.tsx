@@ -158,15 +158,17 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                     />
                     都道府県
                 </label>
-                <label>
-                    <input
-                        type="radio"
-                        value="favorites"
-                        checked={locationChoice === 'favorites'}
-                        onChange={() => setLocationChoice('favorites')}
-                    />
-                    お気に入り
-                </label>
+                {userId && (
+                    <label>
+                        <input
+                            type="radio"
+                            value="favorites"
+                            checked={locationChoice === 'favorites'}
+                            onChange={() => setLocationChoice('favorites')}
+                        />
+                        お気に入り
+                    </label>
+                )}
             </div>
             {locationChoice === 'current' && (
                 <CurrentLocationSearch
@@ -193,7 +195,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
                     isLoading={isLoading}
                 />
             )}
-            {locationChoice === 'favorites' && (
+            {locationChoice === 'favorites' && userId && (
                 <FavoritesRoulette userId={userId} />
             )}
         </div>
