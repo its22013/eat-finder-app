@@ -51,9 +51,11 @@
     width: 235px;
     height: 50px;
     border-radius: 8px;
+    border: 2px solid #080808;
+    background-color: #ffeb9e;
   }
   .button:hover {
-    background-color: rgb(169, 221, 255);
+    background-color: rgb(255, 192, 75);
   }
 
   .confirmation {

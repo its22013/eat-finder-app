@@ -138,7 +138,7 @@ const SearchForm = ({ setRestaurants, setIsLoading, isLoading, setSliderActive, 
     };
 
     return (
-        <div className={styles.container}>
+        <div className={styles.sub_container}>
             <div className={styles.radioGroup}>
                 <label>
                     <input
