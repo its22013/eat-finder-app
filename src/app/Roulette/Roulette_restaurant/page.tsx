@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import styles from "./style/main.module.css";
 import { SlArrowLeftCircle } from "react-icons/sl";
 import { useAuth } from "../../hooks/login";
-import Header from "./header";
+import Header from "../../components/header";
 
 const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false });
 
@@ -34,7 +34,7 @@ const RouletteRestaurantPage = () => {
   return (
     <div>
       <Header />
-      <div>
+      <div className={styles.container}>
       {!sliderActive && !mapActive ? (
         <SearchForm
           setRestaurants={setRestaurants}

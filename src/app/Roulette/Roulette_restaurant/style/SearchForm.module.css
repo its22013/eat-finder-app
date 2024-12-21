@@ -1,4 +1,4 @@
-.container {
+.sub_container {
     max-width: 600px;
     margin: 120px auto;
     padding: 20px;
@@ -84,7 +84,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
+    width: 300px;
 }
 
 .selectGroup label {
@@ -121,10 +121,11 @@
 }
 .label_container {
     width: 100%;
-    height: 30px;
+    height: 45px;
     border-radius: 5px;
     color: black;
     background-color: #fff;
+    border: 3px solid #666666;
 }
 
 @media (max-width: 600px) {
@@ -145,5 +146,8 @@
     }
     .radioGroup label {
         font-size: 13px;
+    }
+    .selectGroup {
+        width: 210px;
     }
 }

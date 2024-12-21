@@ -9,7 +9,7 @@
   
   .restaurant {
     flex: 1 1 calc(30% - 20px); /* 3列レイアウト */
-    background-color: #fff;
+    background-color: #fdf8ee;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -77,7 +77,6 @@
 
   .restaurant {
     margin-right: 10px;
-    background-color: #fdf8ee;
   }
 
   .restaurantImage {
