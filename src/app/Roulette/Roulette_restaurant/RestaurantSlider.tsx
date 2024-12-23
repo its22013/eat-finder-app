@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Restaurant } from "./types/Restaurant";
 import styles from "./style/SearchComponent.module.css";
@@ -8,7 +6,7 @@ import { doc, setDoc, deleteDoc, collection, getDocs } from "firebase/firestore"
 import { db } from "../../hooks/firebase";
 import { useAuth } from "../../hooks/login"; // useAuthフックをインポート
 import { IoMdHeart } from "react-icons/io";
-
+import confetti from "canvas-confetti";
 
 interface Props {
   restaurants: Restaurant[];
@@ -30,7 +28,7 @@ const RestaurantSlider = ({
   selectedRestaurantId,
 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSliding, setIsSliding] = useState(true);
+  const [isSliding, setIsSliding] = useState(false); // ルーレットが開始されていない状態からスタート
   const [favorites, setFavorites] = useState<any[]>([]); // 飲食店情報を保存する配列
   const { user } = useAuth(); // ログインユーザーの情報を取得
 
@@ -38,17 +36,15 @@ const RestaurantSlider = ({
   useEffect(() => {
     if (user) {
       const fetchFavorites = async () => {
-        // ユーザーIDを使って、お気に入りのレストランIDを取得
         const docRef = collection(db, "users", user.uid, "favorites");
-        const querySnapshot = await getDocs(docRef); // すべてのドキュメントを取得
+        const querySnapshot = await getDocs(docRef);
 
-        // ドキュメントが存在する場合、IDのリストをfavoritesに設定
         const fetchedFavorites: any[] = [];
         querySnapshot.forEach((doc) => {
-          fetchedFavorites.push(doc.data()); // 各レストランのデータを取得
+          fetchedFavorites.push(doc.data());
         });
 
-        setFavorites(fetchedFavorites); // お気に入りのレストラン情報をセット
+        setFavorites(fetchedFavorites);
       };
       fetchFavorites();
     }
@@ -71,31 +67,43 @@ const RestaurantSlider = ({
 
     if (isSliding) {
       setIsLoading(true);
+
+      let elapsedTime = 0; // 経過時間を追跡
+
       timer = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * restaurants.length);
         setCurrentIndex(randomIndex);
-      }, 100);
+        elapsedTime += 100; // 100msごとに経過時間を加算
 
-      setTimeout(() => {
-        setIsSliding(false);
-      }, 6000);
-    } else {
-      setIsLoading(false);
-      const selectedRestaurant = restaurants[currentIndex];
-      setSelectedRestaurant(selectedRestaurant);
-      console.log("選ばれた飲食店:", selectedRestaurant);
+        if (elapsedTime >= 5000) { // 5秒経過したら停止
+          clearInterval(timer); // ルーレット停止
+          setIsSliding(false); // ルーレット停止状態にする
+          const selectedRestaurant = restaurants[randomIndex]; // 最後に選ばれた飲食店
+          setSelectedRestaurant(selectedRestaurant); // 選ばれた飲食店を表示
+          setIsLoading(false); // 読み込み終了
+          console.log("選ばれた飲食店:", selectedRestaurant);
+
+          // クラッカーを表示
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: window.innerWidth <= 768 ? { x: 0.5, y: 0.6 } : { x: 0.2, y: 0.6 },
+          });
+        }
+      }, 100); // 100msごとにランダムな飲食店を選ぶ
     }
 
     return () => {
-      clearInterval(timer);
+      clearInterval(timer); // クリーンアップ
     };
-  }, [isSliding, restaurants, setIsLoading, currentIndex, setSelectedRestaurant]);
+  }, [isSliding, restaurants, setIsLoading, setSelectedRestaurant]);
 
   const startSliding = () => {
-    setIsSliding(!isSliding);
+    if (!isSliding) {
+      setIsSliding(true); // ルーレット開始
+    }
   };
 
-  // お気に入りを切り替える処理
   const toggleFavorite = async (restaurantId: string, restaurant: Restaurant) => {
     if (!user) {
       alert("ログインしてください");
@@ -103,23 +111,18 @@ const RestaurantSlider = ({
     }
 
     const docRef = collection(db, "users", user.uid, "favorites");
-  
+
     let updatedFavorites = [...favorites];
 
-    // お気に入りに追加または削除
     const isAlreadyFavorite = favorites.some((fav) => fav.id === restaurantId);
 
     if (isAlreadyFavorite) {
-      // お気に入りから削除
       updatedFavorites = updatedFavorites.filter((fav) => fav.id !== restaurantId);
       const docToDelete = doc(db, "users", user.uid, "favorites", restaurantId);
-   
-      await Promise.all ([
-        deleteDoc(docToDelete),
-      ]); // お気に入り削除
+
+      await Promise.all([deleteDoc(docToDelete)]);
       alert("お気に入りから削除しました！");
     } else {
-      // お気に入りに追加
       const restaurantData = {
         id: restaurant.id,
         name: restaurant.name,
@@ -132,10 +135,8 @@ const RestaurantSlider = ({
         lng: restaurant.lng,
       };
       const favoriteDoc = doc(db, 'users', user.uid, 'favorites', restaurant.id);
-  
-      await Promise.all([
-        setDoc(favoriteDoc, restaurantData),
-      ]);
+
+      await Promise.all([setDoc(favoriteDoc, restaurantData)]);
       updatedFavorites.push(restaurantData);
       alert("お気に入りに追加しました！");
     }
@@ -195,7 +196,7 @@ const RestaurantSlider = ({
                       </a>
                       <div
                         onClick={() => toggleFavorite(restaurant.id, restaurant)}
-                        className={`${styles.heart_icon} ${isFavorite ? styles.favorited : ''}`} 
+                        className={`${styles.heart_icon} ${isFavorite ? styles.favorited : ''}`}
                       >
                         <IoMdHeart />
                       </div>
