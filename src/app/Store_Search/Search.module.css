@@ -185,28 +185,28 @@
     filter: hue-rotate(150deg);
   }
   .modal {
-    width: 2000px;
-    height: 1500px;
+    width: 60%; /* モーダルの幅を小さくする */
+    height: 50%; /* モーダルの高さを小さくする */
     padding: 20px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: relative;
     z-index: 10;
+    overflow: auto; /* 内容が大きい場合にスクロール可能にする */
 }
 
 .modalOverlay {
-    /* 画面全体を覆うための設定 */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* モーダルを中央揃え */
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒背景 */
-    z-index: 9; /* モーダルの下に配置 */
+    background-color: rgba(0, 0, 0, 0.5); /* 背景を半透明に */
+    z-index: 9;
 }
 .closeB {
     margin-left: 98%;
@@ -220,8 +220,8 @@
     text-align: center;
 }
 .Map {
-  width: 60%;
-  height: 40%px;
+  width: 55%;
+  height: 35%px;
   margin: 0 auto;
 }
 .nbButton {

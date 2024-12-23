@@ -427,8 +427,8 @@ export default function StoreSearch() {
                     bottom: 'auto',
                     marginRight: '-50%',
                     transform: 'translate(-50%, -50%)',
-                    width: isMobile ? '90%' : '1300px',
-                    height: isMobile ? '80%' : '900px',
+                    width: isMobile ? '90%' : '80%',
+                    height: isMobile ? '80%' : '70%',
                     
                     },
                 }}
