@@ -40,7 +40,7 @@ https://eat-finder-app.vercel.app/
 | トップ画面 | ログイン画面 |
 |------------|----------------|
 | <img src="https://github.com/user-attachments/assets/b36ef7a9-23f7-4c91-8b33-bb15159e772e" width="500"> |<img src="https://github.com/user-attachments/assets/aaacf85d-ee48-43ca-bc87-ad743dca634c" width="500"> |
-| トップ画面は人目でもわかるように真ん中にユーザーの位置から近くの飲食店の情報を提示してます。 | メールアドレスとパスワードとGoogleでの認証機能を実装しました。 |
+| トップ画面は人目でもわかるように真ん中にユーザーの<br>位置から近くの飲食店の情報を提示してます。 | メールアドレスとパスワードとGoogleでの認証機能を実装しました。 |
 
 | オプション画面 | ルーレット画面 |
 |------------|----------------|
