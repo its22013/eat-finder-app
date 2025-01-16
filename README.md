@@ -51,3 +51,8 @@ https://eat-finder-app.vercel.app/
 |------------|----------------|
 |<img src="https://github.com/user-attachments/assets/06a77df3-4b0d-49ef-8197-39be5f23a433" width=600>|<img src="https://github.com/user-attachments/assets/2e3185ee-2c8b-464c-a5f1-ea8a0cd14250" width=600>|
 |お気に入りした飲食店を表示してます。<br>また、飲食店をGoogleマップに遷移機能や飲食店の１週間の営業時間を見た目でわかる表を実装しました。| マイページは管理者にお問い合わせするフォームがあり困っていることを送信できます。<br>また、ユーザー名を変更することもできます。 |
+
+| 検索画面 | 履歴画面 |
+|------------|----------------|
+|<img src="https://github.com/user-attachments/assets/45cc4fce-3f19-465e-8bb8-9900a0ca892c" width=600>|<img src="https://github.com/user-attachments/assets/af691992-0074-44a1-a9a0-59660b646d39" width=600>|
+|キーワードで検索機能、詳細では飲食店の細かい情報を選択して検索できる機能を実装しました。 | 検索して閲覧した飲食店の情報をFirebaseのFirestoreで履歴として保存しその情報を表示する機能を実装しました。|
